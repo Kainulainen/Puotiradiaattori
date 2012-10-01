@@ -1,11 +1,4 @@
-@import "compass/css3/images";
-@import "compass/css3/box-sizing";
-@import "compass/css3/border-radius";
-@import "compass/css3/box-shadow";
-@import "compass/css3/images";
-@import "compass/css3/transform";
-@import "compass/css3/transition";
-@import "compass/css3/text-shadow";
+@import "compass/css3";
 
 @mixin checkersBackground($color) {
   @include background(linear-gradient(45deg, $color 25%, transparent 25%, transparent), linear-gradient(-45deg, $color 25%, transparent 25%, transparent), linear-gradient(45deg, transparent 75%, $color 75%), linear-gradient(-45deg, transparent 75%, $color 75%));
