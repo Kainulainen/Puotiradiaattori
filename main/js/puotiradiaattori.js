@@ -35,7 +35,7 @@ $(function () {
 
     function spinOneCounter(counterId, totalMoney) {
         var spinners = $('#' + counterId + ' .spinner');
-        var selectedDigits = totalMoney.toString().split('');
+        var selectedDigits = totalMoney.toString().split('').reverse();
         $(selectedDigits).each(rollOneSpinner);
 
         function rollOneSpinner(index, selectedDigit) {
