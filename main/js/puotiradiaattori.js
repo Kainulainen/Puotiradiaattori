@@ -3,12 +3,14 @@ $(function () {
     var serverUrl = 'ws://127.0.0.1:1337';
     var numberOfSpinnersInCounter = 10;
 
-    var digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (digit) {return '<span class="plane digit-' + digit + '"><span class="number"></span></span>';}).join('')
-    var spinners = $.map(new Array(numberOfSpinnersInCounter), function () {return '<div class="spinner">' + digits + '</div>';}).join('');
-
-    $('.counter').html(spinners);
-
+    $('.counter').html(createCounterMarkup());
     connectToServer();
+
+    function createCounterMarkup() {
+        var digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (digit) {return '<span class="plane digit-' + digit + '"><span class="number"></span></span>';}).join('')
+        return $.map(new Array(numberOfSpinnersInCounter), function () {return '<div class="spinner">' + digits + '</div>';}).join('');
+    }
+
 
     function connectToServer() {
         var connection = new WebSocket(serverUrl);
