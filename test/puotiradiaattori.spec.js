@@ -1,20 +1,16 @@
 describe('Puotiradiaattori', function () {
-    var defaultData, increaseData, decreaseData
     beforeEach(function () {
-        defaultData = JSON.stringify({"today":14587});
-        increaseData = JSON.stringify({"today":234980980});
-        decreaseData = JSON.stringify({"today":34});
-        Puotiradiaattori.connectToServer = function() {};
+        Puotiradiaattori.connectToServer = $.noop;
         Puotiradiaattori.init('');
-        Puotiradiaattori.updateCounters(defaultData);
+        Puotiradiaattori.updateCounters(fakeJSON({"today":345}));
     });
     describe('updating counter when new data is received', function() {
         it('increases counter', function() {
-            Puotiradiaattori.updateCounters(increaseData);
+            Puotiradiaattori.updateCounters(fakeJSON({"today":234980980}));
             expect($('#today').counterDigits()).toBe('0234980980');
         });
         it('decreases counter', function() {
-            Puotiradiaattori.updateCounters(decreaseData);
+            Puotiradiaattori.updateCounters(fakeJSON({"today":34}));
             expect($('#today').counterDigits()).toBe('0000000034');
         });
     });
@@ -39,6 +35,8 @@ describe('Puotiradiaattori', function () {
         });
     });
 });
+
+function fakeJSON(obj) {return JSON.stringify(obj)}
 
 $.fn.counterDigits = function() {
     return $.map($(this).find('.spinner'),function (element) {
