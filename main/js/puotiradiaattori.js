@@ -11,13 +11,12 @@ var Config = {
 
 $(function () {
     window.Puotiradiaattori = (function (module) {
+        var singleDigit = '<span class="plane digit-<%= digit %>"><span class="number"></span></span>';
+        var spinner = '<div class="spinner"><%= allDigits %></div>';
 
-        var digits = _.range(0, 9).map(function (digit) {return '<span class="plane digit-' + digit + '"><span class="number"></span></span>';}).join('');
-        _.extend(module.counters, {
-            createSpinners:function (count) {
-                return $.map(_.range(count),function () {return '<div class="spinner">' + digits + '</div>';}).join('');
-            }
-        });
+        var allDigits = _.range(10).map(function (digit) {return _.template(singleDigit, {digit:digit});}).join('');
+        var allSpinners = function(count) {return _.range(count).map(function () {return _.template(spinner, {allDigits:allDigits});}).join('')};
+        _.extend(module.counters, {createSpinners:allSpinners});
 
         $('#counters').html(_.template($("#counter").html(), module.counters));
 
@@ -38,7 +37,10 @@ $(function () {
             module.updateCounters(event.data);
         }
         module.updateCounters = function (data) {
-            $.each(JSON.parse(data), spinOneCounter);
+            $.each(JSON.parse(data), function(counterId, totalMoney) {
+                $('#' + counterId).find('.total').text(totalMoney);
+                spinOneCounter(counterId, totalMoney)
+            });
         }
 
         function spinOneCounter(counterId, totalMoney) {
