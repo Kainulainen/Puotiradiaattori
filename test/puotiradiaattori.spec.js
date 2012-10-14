@@ -3,6 +3,11 @@ describe('Puotiradiaattori', function () {
         Puotiradiaattori.connectToServer = $.noop;
         Puotiradiaattori.updateCounters(fakeJSON({"today":345}));
     });
+    describe('creating counters', function() {
+        it('has numbers in order from 0 to 9 in spinner', function() {
+            expect($('#today').digitsInSpinner()).toEqual('0123456789');
+        });
+    });
     describe('counter configuration', function() {
         it('labels counter', function() {
            expect($('#today').find('h1').text()).toBe(Config.counters[0].label);
@@ -44,6 +49,12 @@ describe('Puotiradiaattori', function () {
 });
 
 function fakeJSON(obj) {return JSON.stringify(obj)}
+
+$.fn.digitsInSpinner = function() {
+    return $.map($(this).find('.spinner:first .plane'), function(element) {
+        return $(element).attr('class').split('digit-')[1]
+    }).join('');
+}
 
 $.fn.counterDigits = function() {
     return $.map($(this).find('.spinner'),function (element) {
