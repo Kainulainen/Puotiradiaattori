@@ -14,9 +14,9 @@
 <script src="js/puotiradiaattori.js"></script>
 <script type="text/template" id='counter'>
     <% _.each(Config.counters, function(counter){ %>
-    <section>
+    <section class="puotiradiaattori" id="<%= counter.id %>">
         <h1><%= counter.label %></h1>
-        <div class="counter" id="<%= counter.id %>"><%= createSpinners(counter.digits) %></div><abbr class="currency" title="EUR">€</abbr>
+        <div class="counter"><%= createSpinners(counter.digits) %></div><abbr class="currency" title="EUR">€</abbr>
     </section>
     <% }); %>
 </script>
