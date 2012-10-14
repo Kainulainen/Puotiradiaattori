@@ -1,8 +1,15 @@
 describe('Puotiradiaattori', function () {
     beforeEach(function () {
         Puotiradiaattori.connectToServer = $.noop;
-        Puotiradiaattori.init('');
         Puotiradiaattori.updateCounters(fakeJSON({"today":345}));
+    });
+    describe('counter configuration', function() {
+        it('labels counter', function() {
+           expect($('h1:first').text()).toBe(Config.counters[0].label);
+        });
+        it('sets counter digit count', function() {
+            expect($('#today').find('.spinner').length).toEqual(Config.counters[0].digits);
+        });
     });
     describe('updating counter when new data is received', function() {
         it('increases counter', function() {

@@ -1,41 +1,61 @@
-var Puotiradiaattori = {
-    init: function (serverUrl) {
-        Puotiradiaattori.serverUrl = serverUrl;
-        $('.counter').html(createCounterMarkup());
-        Puotiradiaattori.connectToServer();
-
-        function createCounterMarkup() {
-            var numberOfSpinnersInCounter = 10;
-            var digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (digit) {return '<span class="plane digit-' + digit + '"><span class="number"></span></span>';}).join('');
-            return $.map(new Array(numberOfSpinnersInCounter),function () {return '<div class="spinner">' + digits + '</div>';}).join('');
-        }
-    },
-    connectToServer: function () {
-        var connection = new WebSocket(Puotiradiaattori.serverUrl);
-        connection.onopen = Puotiradiaattori.connect;
-        connection.onclose = Puotiradiaattori.disconnect;
-        connection.onmessage = function(event) {Puotiradiaattori.updateCounters(event.data)};
-    },
-    connect: function () {
-        $('#connection').html('CONNECTED');
-    },
-    disconnect: function () {
-        $('#connection').html('DISCONNECTED');
-        setTimeout(Puotiradiaattori.connectToServer, 50000);
-    },
-    updateCounters: function (data) {
-        $.each(JSON.parse(data), Puotiradiaattori.spinOneCounter);
-    },
-    spinOneCounter:function (counterId, totalMoney) {
-        var spinners = $('#' + counterId + ' .spinner');
-        var selectedDigits = totalMoney.toString().split('');
-        var allDigits = $.merge(zeros(spinners.length - selectedDigits.length), selectedDigits).reverse();
-        $(allDigits).each(rollOneSpinner);
-
-        function rollOneSpinner(index, selectedDigit) {
-            spinners.eq(index).removeClass().addClass('spinner roll-to-' + selectedDigit)
-        }
-
-        function zeros(count) {return $.map(new Array(count), function () {return '0'});}
-    }
+var Config = {
+    'serverUrl':'ws://127.0.0.1:1337',
+    'counters':[
+        {'label':'tänään', 'id':'today', digits:10},
+        {'label':'viikko', 'id':'week', digits:10},
+        {'label':'kuukausi', 'id':'month', digits:10},
+        {'label':'vuosi', 'id':'year', digits:10},
+        {'label':'kaikki', 'id':'total', digits:10}
+    ]
 }
+
+$(function () {
+    window.Puotiradiaattori = (function (module) {
+
+        var digits = _.range(0, 9).map(function (digit) {return '<span class="plane digit-' + digit + '"><span class="number"></span></span>';}).join('');
+        _.extend(module.counters, {
+            createSpinners:function (count) {
+                return $.map(_.range(count),function () {return '<div class="spinner">' + digits + '</div>';}).join('');
+            }
+        });
+
+        $('#counters').html(_.template($("#counter").html(), module.counters));
+
+        module.connectToServer = function () {
+            var connection = new WebSocket(module.serverUrl);
+            connection.onopen = module.connect;
+            connection.onclose = module.disconnect;
+            connection.onmessage = module.message;
+        }
+        module.connect = function () {
+            $('#connection').html('CONNECTED');
+        }
+        module.disconnect = function () {
+            $('#connection').html('DISCONNECTED');
+            setTimeout(module.connectToServer, 50000);
+        }
+        module.message = function (event) {
+            module.updateCounters(event.data);
+        }
+        module.updateCounters = function (data) {
+            $.each(JSON.parse(data), spinOneCounter);
+        }
+
+        function spinOneCounter(counterId, totalMoney) {
+            var spinners = $('#' + counterId + ' .spinner');
+            var selectedDigits = totalMoney.toString().split('');
+            var allDigits = $.merge(zeros(spinners.length - selectedDigits.length), selectedDigits).reverse();
+            $(allDigits).each(rollOneSpinner);
+
+            function rollOneSpinner(index, selectedDigit) {
+                spinners.eq(index).removeClass().addClass('spinner roll-to-' + selectedDigit)
+            }
+
+            function zeros(count) {return $.map(new Array(count), function () {return '0'});}
+        }
+
+        return module;
+
+    })(Config);
+    Puotiradiaattori.connectToServer();
+});
