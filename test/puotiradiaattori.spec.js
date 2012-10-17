@@ -25,6 +25,10 @@ describe('Puotiradiaattori', function () {
             Puotiradiaattori.updateCounters(fakeJSON({"today":34}));
             expect($('#today').counterDigits()).toBe('0000000034');
         });
+        it('adds spinners when there are not enough digits', function() {
+            Puotiradiaattori.updateCounters(fakeJSON({"today":34234980980}));
+            expect($('#today').counterDigits()).toBe('34234980980');
+        });
     });
     describe('server connection indicating', function() {
         it('indicates when server is connected', function() {

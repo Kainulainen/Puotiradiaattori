@@ -15,8 +15,8 @@ $(function () {
         var spinner = '<div class="spinner"><%= allDigits %></div>';
 
         var allDigits = _.range(10).map(function (digit) {return _.template(singleDigit, {digit:digit});}).join('');
-        var allSpinners = function(count) {return _.range(count).map(function () {return _.template(spinner, {allDigits:allDigits});}).join('')};
-        _.extend(module.counters, {createSpinners:allSpinners});
+        var createSpinners = function(count) {return _.range(count).map(function () {return _.template(spinner, {allDigits:allDigits});}).join('')};
+        _.extend(module.counters, {createSpinners:createSpinners});
 
         $('#counters').html(_.template($("#counter").html(), module.counters));
 
@@ -39,12 +39,22 @@ $(function () {
         module.updateCounters = function (data) {
             $.each(JSON.parse(data), function(counterId, totalMoney) {
                 $('#' + counterId).find('.total').text(totalMoney);
-                spinOneCounter(counterId, totalMoney)
+
+                var spinners = $('#' + counterId).find('.spinner');
+                var selectedDigits = totalMoney.toString().split('');
+                if (selectedDigits.length > spinners.length) {
+                    addSpinners(counterId, spinners.length + (selectedDigits.length - spinners.length));
+                }
+                spinOneCounter(counterId, totalMoney);
             });
         }
 
+        function addSpinners(counterId, count) {
+            $('#' + counterId).find('.counter').html(createSpinners(count));
+        }
+
         function spinOneCounter(counterId, totalMoney) {
-            var spinners = $('#' + counterId + ' .spinner');
+            var spinners = $('#' + counterId).find('.spinner');
             var selectedDigits = totalMoney.toString().split('');
             var allDigits = $.merge(zeros(spinners.length - selectedDigits.length), selectedDigits).reverse();
             $(allDigits).each(rollOneSpinner);
