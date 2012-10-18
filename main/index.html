@@ -13,12 +13,19 @@
 <script src="js/underscore-min.js"></script>
 <script src="js/puotiradiaattori.js"></script>
 <script type="text/template" id='counter'>
-    <% _.each(Config.counters, function(counter){ %>
-    <section class="puotiradiaattori" id="<%= counter.id %>">
-        <h1><%= counter.label %></h1>
-        <div class="counter"><%= createSpinners(counter.digits) %></div><abbr class="currency" title="EUR">€</abbr>
+    <section class="puotiradiaattori" id="<%= id %>">
+        <h1><%= label %></h1>
+        <div class="counter">
+        </div><abbr class="currency" title="EUR">€</abbr>
     </section>
-    <% }); %>
+</script>
+
+<script type="text/template" id='spinner'>
+    <div class="spinner">
+        <% _.times(10, function(digit){ %>
+        <span class="plane digit-<%= digit %>"><span class="number"></span></span>
+        <% }); %>
+    </div>
 </script>
 </body>
 </html>

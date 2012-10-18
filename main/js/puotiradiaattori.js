@@ -11,14 +11,14 @@ var Config = {
 
 $(function () {
     window.Puotiradiaattori = (function (module) {
-        var singleDigit = '<span class="plane digit-<%= digit %>"><span class="number"></span></span>';
-        var spinner = '<div class="spinner"><%= allDigits %></div>';
 
-        var allDigits = _.range(10).map(function (digit) {return _.template(singleDigit, {digit:digit});}).join('');
-        var createSpinners = function(count) {return _.range(count).map(function () {return _.template(spinner, {allDigits:allDigits});}).join('')};
-        _.extend(module.counters, {createSpinners:createSpinners});
+        $("#counters").html(_.map(module.counters, function(counter) {
+            return $(_.template($("#counter").html(), counter)).find('.counter').html(createSpinners(counter.digits)).end();
+        }));
 
-        $('#counters').html(_.template($("#counter").html(), module.counters));
+        function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
+
+        function createOneSpinner() {return _.template($("#spinner").html(), {});}
 
         module.connectToServer = function () {
             var connection = new WebSocket(module.serverUrl);
@@ -37,7 +37,7 @@ $(function () {
             module.updateCounters(event.data);
         }
         module.updateCounters = function (data) {
-            $.each(JSON.parse(data), function(counterId, totalMoney) {
+            $.each(JSON.parse(data), function (counterId, totalMoney) {
                 $('#' + counterId).find('.total').text(totalMoney);
 
                 var spinners = $('#' + counterId).find('.spinner');
