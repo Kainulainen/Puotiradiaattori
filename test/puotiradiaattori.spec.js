@@ -3,7 +3,7 @@ describe('Puotiradiaattori', function () {
         Puotiradiaattori.message(fakeJSON({"today":345}));
     });
     describe('creating counters', function() {
-        it('has numbers in order from 0 to 9 in spinner', function() {
+        it('creates spinner with numbers in order from 0 to 9', function() {
             expect($('#today').digitsInSpinner()).toEqual('0123456789');
         });
     });
