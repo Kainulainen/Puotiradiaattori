@@ -9,16 +9,16 @@ var Config = {
     ]
 }
 
-window.Puotiradiaattori = (function (module) {
+window.Puotiradiaattori = (function (settings) {
 
-    $("#counters").html(_.map(module.counters, function(counter) {
+    $("#counters").html(_.map(settings.counters, function(counter) {
         return $(_.template($("#counter").html(), counter)).find('.counter').html(createSpinners(counter.digits)).end();
     }));
 
     function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
     function createOneSpinner() {return _.template($("#spinner").html(), {});}
 
-    var connection = Socket(module.serverUrl, connect, disconnect, updateCounters);
+    var connection = Socket(settings.serverUrl, connect, disconnect, updateCounters);
 
     function connect() {
         $('#connection').html('CONNECTED');
