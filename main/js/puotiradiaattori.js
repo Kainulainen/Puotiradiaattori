@@ -8,57 +8,56 @@ var Config = {
         {'label':'kaikki', 'id':'total', digits:10}
     ]
 }
-$(function () {
-    window.Puotiradiaattori = (function (module) {
 
-        $("#counters").html(_.map(module.counters, function(counter) {
-            return $(_.template($("#counter").html(), counter)).find('.counter').html(createSpinners(counter.digits)).end();
-        }));
+window.Puotiradiaattori = (function (module) {
 
-        function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
-        function createOneSpinner() {return _.template($("#spinner").html(), {});}
+    $("#counters").html(_.map(module.counters, function(counter) {
+        return $(_.template($("#counter").html(), counter)).find('.counter').html(createSpinners(counter.digits)).end();
+    }));
 
-        var connection = Socket(module.serverUrl, connect, disconnect, updateCounters);
+    function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
+    function createOneSpinner() {return _.template($("#spinner").html(), {});}
 
-        function connect() {
-            $('#connection').html('CONNECTED');
-        }
-        function disconnect() {
-            $('#connection').html('DISCONNECTED');
-            setTimeout(connection.reconnect, 50000);
-        }
+    var connection = Socket(module.serverUrl, connect, disconnect, updateCounters);
 
-        function updateCounters(event) {
-            $.each(JSON.parse(event.data), function (counterId, totalMoney) {
-                $('#' + counterId).find('.total').text(totalMoney);
+    function connect() {
+        $('#connection').html('CONNECTED');
+    }
+    function disconnect() {
+        $('#connection').html('DISCONNECTED');
+        setTimeout(connection.reconnect, 50000);
+    }
 
-                var spinners = $('#' + counterId).find('.spinner');
-                var selectedDigits = totalMoney.toString().split('');
-                if (selectedDigits.length > spinners.length) {
-                    addSpinners(counterId, spinners.length + (selectedDigits.length - spinners.length));
-                }
-                spinOneCounter(counterId, totalMoney);
-            });
-        }
+    function updateCounters(event) {
+        $.each(JSON.parse(event.data), function (counterId, totalMoney) {
+            $('#' + counterId).find('.total').text(totalMoney);
 
-        function addSpinners(counterId, count) {
-            $('#' + counterId).find('.counter').html(createSpinners(count));
-        }
-
-        function spinOneCounter(counterId, totalMoney) {
             var spinners = $('#' + counterId).find('.spinner');
             var selectedDigits = totalMoney.toString().split('');
-            var allDigits = $.merge(zeros(spinners.length - selectedDigits.length), selectedDigits).reverse();
-            $(allDigits).each(rollOneSpinner);
-
-            function rollOneSpinner(index, selectedDigit) {
-                spinners.eq(index).removeClass().addClass('spinner roll-to-' + selectedDigit)
+            if (selectedDigits.length > spinners.length) {
+                addSpinners(counterId, spinners.length + (selectedDigits.length - spinners.length));
             }
+            spinOneCounter(counterId, totalMoney);
+        });
+    }
 
-            function zeros(count) {return $.map(new Array(count), function () {return '0'});}
+    function addSpinners(counterId, count) {
+        $('#' + counterId).find('.counter').html(createSpinners(count));
+    }
+
+    function spinOneCounter(counterId, totalMoney) {
+        var spinners = $('#' + counterId).find('.spinner');
+        var selectedDigits = totalMoney.toString().split('');
+        var allDigits = $.merge(zeros(spinners.length - selectedDigits.length), selectedDigits).reverse();
+        $(allDigits).each(rollOneSpinner);
+
+        function rollOneSpinner(index, selectedDigit) {
+            spinners.eq(index).removeClass().addClass('spinner roll-to-' + selectedDigit)
         }
 
-        return connection;
+        function zeros(count) {return $.map(new Array(count), function () {return '0'});}
+    }
 
-    })(Config);
-});
+    return connection;
+
+})(Config);

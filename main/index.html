@@ -9,10 +9,6 @@
 <body>
 <section id="counters"></section>
 <section id="connection"></section>
-<script src="js/lib/jquery-1.8.2.min.js"></script>
-<script src="js/lib/underscore-min.js"></script>
-<script src="js/lib/socket.js"></script>
-<script src="js/puotiradiaattori.js"></script>
 <script type="text/template" id='counter'>
     <section class="puotiradiaattori" id="<%= id %>">
         <h1><%= label %></h1>
@@ -20,7 +16,6 @@
         </div><abbr class="currency" title="EUR">€</abbr>
     </section>
 </script>
-
 <script type="text/template" id='spinner'>
     <div class="spinner">
         <% _.times(10, function(digit){ %>
@@ -28,5 +23,9 @@
         <% }); %>
     </div>
 </script>
+<script src="js/lib/jquery-1.8.2.min.js"></script>
+<script src="js/lib/underscore-min.js"></script>
+<script src="js/lib/socket.js"></script>
+<script src="js/puotiradiaattori.js"></script>
 </body>
 </html>
