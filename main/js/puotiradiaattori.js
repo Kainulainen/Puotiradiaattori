@@ -1,5 +1,6 @@
 var Config = {
     'serverUrl':'ws://127.0.0.1:1337',
+    'sound': true,
     'counters':[
         {'label':'tänään', 'id':'today', digits:10},
         {'label':'viikko', 'id':'week', digits:10},
@@ -19,6 +20,7 @@ window.Puotiradiaattori = (function (settings) {
     function createOneSpinner() {return _.template($("#spinner").html(), {});}
 
     var connection = Socket(settings.serverUrl, connect, disconnect, updateCounters);
+    var sound = Sound(settings.sound);
 
     function connect() {
         $('#connection').html('CONNECTED');
@@ -36,6 +38,7 @@ window.Puotiradiaattori = (function (settings) {
             var selectedDigits = totalMoney.toString().split('');
             if (selectedDigits.length > spinners.length) {
                 addSpinners(counterId, spinners.length + (selectedDigits.length - spinners.length));
+                sound.play();
             }
             spinOneCounter(counterId, totalMoney);
         });
@@ -58,6 +61,6 @@ window.Puotiradiaattori = (function (settings) {
         function zeros(count) {return $.map(new Array(count), function () {return '0'});}
     }
 
-    return connection;
+    return {connection: connection, sound: sound};
 
 })(Config);

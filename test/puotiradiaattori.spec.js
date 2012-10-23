@@ -1,6 +1,6 @@
 describe('Puotiradiaattori', function () {
     beforeEach(function () {
-        Puotiradiaattori.message(fakeJSON({"today":345}));
+        spinCounters({"today":345});
     });
     describe('creating counters', function() {
         it('creates spinner with numbers in order from 0 to 9', function() {
@@ -17,39 +17,62 @@ describe('Puotiradiaattori', function () {
     });
     describe('updating counter when new data is received', function() {
         it('increases counter', function() {
-            Puotiradiaattori.message(fakeJSON({"today":234980980}));
+            spinCounters({"today":234980980});
             expect($('#today').counterDigits()).toBe('0234980980');
         });
         it('decreases counter', function() {
-            Puotiradiaattori.message(fakeJSON({"today":34}));
+            spinCounters({"today":34});
             expect($('#today').counterDigits()).toBe('0000000034');
         });
         it('adds spinners when there are not enough digits', function() {
-            Puotiradiaattori.message(fakeJSON({"today":34234980980}));
+            spinCounters({"today":34234980980});
             expect($('#today').counterDigits()).toBe('34234980980');
+        });
+        it('plays sound when new digits are added', function() {
+            spyOn(Puotiradiaattori.sound, 'play');
+            spinCounters({"today":134234980980});
+            expect(Puotiradiaattori.sound.play).toHaveBeenCalled();
         });
     });
     describe('server connection indicating', function() {
         it('indicates when server is connected', function() {
-            Puotiradiaattori.connect();
+            Puotiradiaattori.connection.connect();
             expect($('#connection').html()).toBe('CONNECTED');
         });
         it('indicates when server is disconnected', function() {
-            Puotiradiaattori.connect();
-            Puotiradiaattori.disconnect();
+            Puotiradiaattori.connection.connect();
+            Puotiradiaattori.connection.disconnect();
             expect($('#connection').html()).toBe('DISCONNECTED');
         });
     });
     describe('reconnecting to server', function() {
         it('tries to reconnect after 50000ms', function() {
             jasmine.Clock.useMock();
-            spyOn(Puotiradiaattori, 'reconnect');
-            Puotiradiaattori.disconnect();
+            spyOn(Puotiradiaattori.connection, 'reconnect');
+            Puotiradiaattori.connection.disconnect();
             jasmine.Clock.tick(50000);
-            expect(Puotiradiaattori.reconnect).toHaveBeenCalled();
+            expect(Puotiradiaattori.connection.reconnect).toHaveBeenCalled();
         });
     });
 });
+
+describe('Sound', function() {
+    it('can be set to on by default', function() {
+        expect(Sound(true).isOn()).toBeTruthy();
+    });
+    it('can be set to off by default', function() {
+        expect(Sound(false).isOn()).toBeFalsy();
+    });
+    it('can be toggled', function() {
+        var sound = Sound(false);
+        sound.toggle();
+        expect(sound.isOn()).toBeTruthy();
+    });
+});
+
+function spinCounters(json) {
+    Puotiradiaattori.connection.message(fakeJSON(json));
+}
 
 function fakeJSON(obj) {
     var message = {};
