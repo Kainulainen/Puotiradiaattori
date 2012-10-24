@@ -4,10 +4,10 @@ body { background: -webkit-linear-gradient(45deg, #216c2a 25%, transparent 25%, 
 
 h1 { margin: 0 auto; font-size: 3em; font-weight: normal; color: #fff; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.8); }
 
-.current { margin-top: 3em; margin-bottom: 3em; }
-.current h1 { font-size: 4em; }
+#today { margin-bottom: 2em; }
+#today h1 { font-size: 4em; }
 
-.history { -webkit-transform: scale(0.7, 0.7); -moz-transform: scale(0.7, 0.7); -ms-transform: scale(0.7, 0.7); -o-transform: scale(0.7, 0.7); transform: scale(0.7, 0.7); margin-top: -7em; }
+#week, #month, #year, #total { -webkit-transform: scale(0.7, 0.7); -moz-transform: scale(0.7, 0.7); -ms-transform: scale(0.7, 0.7); -o-transform: scale(0.7, 0.7); transform: scale(0.7, 0.7); margin-top: -3em; }
 
 .currency { border: 0; display: inline-block; color: #fff; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.4); font-size: 4em; }
 

@@ -11,12 +11,12 @@ $counterBorderThickness: 2px;
 
 * {@include box-sizing(border-box);}
 body {@include checkersBackground($bodyBgColor); background-color: darken($bodyBgColor, 2%);  background-size: 50px 50px; color: #fff; font: 1em Helvetica,Arial; text-align: center;}
-h1 {margin:0 auto; font:{size: 3em; weight: normal}; color: #fff; @include text-shadow(0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.8));}
 
-.current {margin-top: 3em; margin-bottom: 3em;
+h1 {margin:0 auto; font:{size: 3em; weight: normal}; color: #fff; @include text-shadow(0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.8));}
+#today {margin-bottom: 2em;
   h1 {font-size: 4em;}
 }
-.history {@include transform(scale(0.7,0.7)); margin-top: -7em;}
+#week, #month, #year, #total {@include transform(scale(0.7,0.7)); margin-top: -3em;}
 
 .currency {border:0; display: inline-block; color: #fff; @include text-shadow(0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.4)); font-size: 4em;}
 
