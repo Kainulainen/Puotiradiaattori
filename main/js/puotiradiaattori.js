@@ -33,8 +33,6 @@ window.Puotiradiaattori = (function (settings) {
 
     function updateCounters(event) {
         $.each(JSON.parse(event.data), function (counterId, totalMoney) {
-            $('#' + counterId).find('.total').text(totalMoney);
-
             var spinners = $('#' + counterId).find('.spinner');
             var selectedDigits = totalMoney.toString().split('');
             if (selectedDigits.length > spinners.length) {
