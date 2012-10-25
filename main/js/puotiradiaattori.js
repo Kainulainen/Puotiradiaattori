@@ -21,6 +21,7 @@ window.Puotiradiaattori = (function (settings) {
 
     var connection = Socket(settings.serverUrl, connect, disconnect, updateCounters);
     var sound = Sound(settings.sound);
+    sound.play();
 
     function connect() {
         $('#connection').html('CONNECTED');
