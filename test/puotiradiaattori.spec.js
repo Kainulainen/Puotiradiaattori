@@ -36,22 +36,22 @@ describe('Puotiradiaattori', function () {
     });
     describe('server connection indicating', function() {
         it('indicates when server is connected', function() {
-            Puotiradiaattori.connection.connect();
+            Puotiradiaattori.connection.open();
             expect($('#connection').html()).toBe('CONNECTED');
         });
         it('indicates when server is disconnected', function() {
-            Puotiradiaattori.connection.connect();
-            Puotiradiaattori.connection.disconnect();
+            Puotiradiaattori.connection.open();
+            Puotiradiaattori.connection.close();
             expect($('#connection').html()).toBe('DISCONNECTED');
         });
     });
     describe('reconnecting to server', function() {
         it('tries to reconnect after 50000ms', function() {
             jasmine.Clock.useMock();
-            spyOn(Puotiradiaattori.connection, 'reconnect');
-            Puotiradiaattori.connection.disconnect();
+            spyOn(Puotiradiaattori.connection, 'connect');
+            Puotiradiaattori.connection.close();
             jasmine.Clock.tick(50000);
-            expect(Puotiradiaattori.connection.reconnect).toHaveBeenCalled();
+            expect(Puotiradiaattori.connection.connect).toHaveBeenCalled();
         });
     });
 });

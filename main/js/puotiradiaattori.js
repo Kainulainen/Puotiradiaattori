@@ -21,6 +21,8 @@ window.Puotiradiaattori = (function (settings) {
     function createOneSpinner() {return _.template($("#spinner").html(), {});}
 
     var connection = Socket(settings.serverUrl, connect, disconnect, updateCounters);
+    connection.connect();
+
     var sound = Sound(settings.sound);
     sound.play();
 
@@ -29,7 +31,7 @@ window.Puotiradiaattori = (function (settings) {
     }
     function disconnect() {
         $('#connection').html('DISCONNECTED');
-        setTimeout(connection.reconnect, 50000);
+        setTimeout(connection.connect, 50000);
     }
 
     function updateCounters(event) {
