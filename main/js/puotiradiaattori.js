@@ -13,9 +13,10 @@ var Config = {
 window.Puotiradiaattori = (function (settings) {
 
     $("#counters").html(_.map(settings.counters, function(counter) {
-        return $(_.template($("#counter").html(), counter)).find('.counter').html(createSpinners(counter.digits)).end();
+        return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits)).end();
     }));
 
+    function createOneCounter(counter) {return _.template($("#counter").html(), counter)}
     function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
     function createOneSpinner() {return _.template($("#spinner").html(), {});}
 
