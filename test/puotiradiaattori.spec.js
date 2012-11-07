@@ -1,5 +1,7 @@
+var puotiradiaattori;
 describe('Puotiradiaattori', function () {
     beforeEach(function () {
+        puotiradiaattori = Puotiradiaattori(Config);
         spinCounters({"today":345, 'week': 456});
     });
     describe('creating counters', function() {
@@ -29,14 +31,14 @@ describe('Puotiradiaattori', function () {
             expect($('#today').counterDigits()).toBe('34234980980');
         });
         it('plays sound when new digits are added', function() {
-            spyOn(Puotiradiaattori.sound, 'play');
+            spyOn(puotiradiaattori.sound, 'play');
             spinCounters({"today":134234980980});
-            expect(Puotiradiaattori.sound.play).toHaveBeenCalled();
+            expect(puotiradiaattori.sound.play).toHaveBeenCalled();
         });
     });
     describe('updating multipile counters at once', function() {
         it('sets today to 345', function() {
-            expect($('#today').counterDigits()).toBe('000000000345');
+            expect($('#today').counterDigits()).toBe('0000000345');
         });
         it('sets week to 456', function() {
             expect($('#week').counterDigits()).toBe('0000000456');
@@ -56,10 +58,10 @@ describe('Puotiradiaattori', function () {
     describe('reconnecting to server', function() {
         it('tries to reconnect after 50000ms', function() {
             jasmine.Clock.useMock();
-            spyOn(Puotiradiaattori.connection, 'connect');
+            spyOn(puotiradiaattori.connection, 'connect');
             closeConnection()
             jasmine.Clock.tick(50000);
-            expect(Puotiradiaattori.connection.connect).toHaveBeenCalled();
+            expect(puotiradiaattori.connection.connect).toHaveBeenCalled();
         });
     });
 });
@@ -91,7 +93,7 @@ function openConnection() {
     toMessageBus({'type': 'open'});
 }
 function toMessageBus(msg) {
-    Puotiradiaattori.connection.bus.push(msg)
+    puotiradiaattori.connection.bus.push(msg)
 }
 
 $.fn.digitsInSpinner = function() {

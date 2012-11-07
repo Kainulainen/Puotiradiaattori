@@ -10,7 +10,7 @@ var Config = {
     ]
 }
 
-window.Puotiradiaattori = (function (settings) {
+var Puotiradiaattori = function (settings) {
     var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits)).end();});
     var sound = Sound(settings.sound);
     var socket = SocketBus(settings.serverUrl);
@@ -67,4 +67,5 @@ window.Puotiradiaattori = (function (settings) {
 
     return {connection: socket, sound: sound};
 
-})(Config);
+};
+Puotiradiaattori(Config);
