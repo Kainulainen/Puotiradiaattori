@@ -2,7 +2,8 @@ window.SocketBus = function(url) {
     var bus = new Bacon.Bus(),
         open = filterEventsBy('open'),
         close = filterEventsBy('close'),
-        message = filterEventsBy('message');
+        message = filterEventsBy('message'),
+        error = filterEventsBy('error');
 
     function connect() {
         var connection = new WebSocket(url);
@@ -17,6 +18,7 @@ window.SocketBus = function(url) {
         bus: bus,
         open: open,
         close: close,
-        message: message
+        message: message,
+        error: error
     }
 }
