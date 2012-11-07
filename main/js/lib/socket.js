@@ -6,9 +6,7 @@ window.SocketBus = function(url) {
 
     function connect() {
         var connection = new WebSocket(url);
-        connection.onopen = toBus;
-        connection.onclose = toBus;
-        connection.onmessage = toBus;
+        with (connection) onopen = onclose = onmessage = onerror = toBus;
     }
 
     function toBus(event) {bus.push(event);}
