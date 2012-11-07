@@ -23,7 +23,7 @@ window.Puotiradiaattori = (function (settings) {
     socket.close.onValue(showDisconnectMessage);
     socket.close.onValue(reconnect);
 
-    var counters = socket.messages.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
+    var counters = socket.message.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
     var needsMoreSpinners = counters.filter(needMoreSpinners);
     needsMoreSpinners.onValue(function() {sound.play()});
     needsMoreSpinners.onValue(addSpinner);
