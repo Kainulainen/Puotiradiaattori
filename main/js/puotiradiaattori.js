@@ -30,7 +30,7 @@ window.Puotiradiaattori = (function (settings) {
     counters.onValue(spin);
 
     function counterElementAndDigitsToSpin(message) {
-        return {'element':$('#' + _.keys(message)[0]), 'digitsToSpin': _.values(message)[0].toString().split('')}
+        return {'element':$('#' + _.keys(message)), 'digitsToSpin':_.values(message).toString().split('')}
     }
 
     function needMoreSpinners(counter) {return counter.digitsToSpin.length > counter.element.find('.spinner').length;}
