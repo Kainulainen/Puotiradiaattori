@@ -1,14 +1,24 @@
-window.Socket = function(url, onOpen, onClose, onMessage) { 
-    function connectToServer() {
+window.SocketBus = function(url) {
+    var bus = new Bacon.Bus(),
+        open = filterEventsBy('open'),
+        close = filterEventsBy('close'),
+        messages = filterEventsBy('message');
+
+    function connect() {
         var connection = new WebSocket(url);
-        connection.onopen = onOpen;
-        connection.onclose = onClose;
-        connection.onmessage = onMessage;
+        connection.onopen = toBus;
+        connection.onclose = toBus;
+        connection.onmessage = toBus;
     }
+
+    function toBus(event) {bus.push(event);}
+    function filterEventsBy(type) {return bus.filter(function(event) {return event.type === type;});}
+
     return {
-        connect: connectToServer,
-        open: onOpen,
-        close: onClose,
-        message: onMessage
+        connect: connect,
+        bus: bus,
+        open: open,
+        close: close,
+        messages: messages
     }
 }

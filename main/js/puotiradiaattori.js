@@ -11,49 +11,41 @@ var Config = {
 }
 
 window.Puotiradiaattori = (function (settings) {
-
-    $("#counters").html(_.map(settings.counters, function(counter) {
-        return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits)).end();
-    }));
-
-    function createOneCounter(counter) {return _.template($("#counter").html(), counter)}
-    function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
-    function createOneSpinner() {return _.template($("#spinner").html(), {});}
-
-    var connection = Socket(settings.serverUrl, connect, disconnect, updateCounters);
-    connection.connect();
-
+    var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits)).end();});
     var sound = Sound(settings.sound);
+    var socket = SocketBus(settings.serverUrl);
+
+    $("#counters").html(html);
     sound.play();
+    socket.connect();
 
-    function connect() {
-        $('#connection').html('CONNECTED');
-    }
-    function disconnect() {
-        $('#connection').html('DISCONNECTED');
-        setTimeout(connection.connect, 50000);
-    }
+    socket.open.onValue(showConnectedMessage);
+    socket.close.onValue(showDisconnectMessage);
+    socket.close.onValue(reconnect);
 
-    function updateCounters(event) {
-        $.each(JSON.parse(event.data), function (counterId, totalMoney) {
-            var spinners = $('#' + counterId).find('.spinner');
-            var selectedDigits = totalMoney.toString().split('');
-            if (selectedDigits.length > spinners.length) {
-                addSpinners(counterId, spinners.length + (selectedDigits.length - spinners.length));
-                sound.play();
-            }
-            spinOneCounter(counterId, totalMoney);
-        });
+    var counters = socket.messages.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
+    var needsMoreSpinners = counters.filter(needMoreSpinners);
+    needsMoreSpinners.onValue(function() {sound.play()});
+    needsMoreSpinners.onValue(addSpinner);
+    counters.onValue(spin);
+
+    function counterElementAndDigitsToSpin(message) {
+        return {'element':$('#' + _.keys(message)[0]), 'digitsToSpin': _.values(message)[0].toString().split('')}
     }
 
-    function addSpinners(counterId, count) {
-        $('#' + counterId).find('.counter').html(createSpinners(count));
+    function needMoreSpinners(counter) {return counter.digitsToSpin.length > counter.element.find('.spinner').length;}
+
+    function addSpinner(counter) {
+        var spinners = counter.element.find('.spinner');
+        var digitsToSpin = counter.digitsToSpin;
+        var spinnersToAdd = spinners.length + (digitsToSpin.length - spinners.length);
+        counter.element.find('.counter').html(createSpinners(spinnersToAdd));
     }
 
-    function spinOneCounter(counterId, totalMoney) {
-        var spinners = $('#' + counterId).find('.spinner');
-        var selectedDigits = totalMoney.toString().split('');
-        var allDigits = $.merge(zeros(spinners.length - selectedDigits.length), selectedDigits).reverse();
+    function spin(counter) {
+        var spinners = counter.element.find('.spinner');
+        var digitsToSpin = counter.digitsToSpin;
+        var allDigits = $.merge(zeros(spinners.length - digitsToSpin.length), digitsToSpin).reverse();
         $(allDigits).each(rollOneSpinner);
 
         function rollOneSpinner(index, selectedDigit) {
@@ -63,6 +55,16 @@ window.Puotiradiaattori = (function (settings) {
         function zeros(count) {return $.map(new Array(count), function () {return '0'});}
     }
 
-    return {connection: connection, sound: sound};
+    function createOneCounter(counter) {return _.template($("#counter").html(), counter)}
+    function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
+    function createOneSpinner() {return _.template($("#spinner").html(), {});}
+
+    function showConnectedMessage() {$('#connection').html('CONNECTED');}
+    function showDisconnectMessage() {$('#connection').html('DISCONNECTED');}
+    function reconnect() {setTimeout(socket.connect, 50000);}
+
+    function toJSON(message) {return JSON.parse(message.data);}
+
+    return {connection: socket, sound: sound};
 
 })(Config);

@@ -1,6 +1,6 @@
 describe('Puotiradiaattori', function () {
     beforeEach(function () {
-        spinCounters({"today":345});
+        spinCounters({"today":345, 'week': 456});
     });
     describe('creating counters', function() {
         it('creates spinner with numbers in order from 0 to 9', function() {
@@ -16,7 +16,7 @@ describe('Puotiradiaattori', function () {
         });
     });
     describe('updating counter when new data is received', function() {
-        it('increases counter', function() {
+        it('increases counters', function() {
             spinCounters({"today":234980980});
             expect($('#today').counterDigits()).toBe('0234980980');
         });
@@ -34,14 +34,22 @@ describe('Puotiradiaattori', function () {
             expect(Puotiradiaattori.sound.play).toHaveBeenCalled();
         });
     });
+    describe('updating multipile counters at once', function() {
+        it('sets today to 345', function() {
+            expect($('#today').counterDigits()).toBe('000000000345');
+        });
+        it('sets week to 456', function() {
+            expect($('#week').counterDigits()).toBe('0000000456');
+        });
+    });
     describe('server connection indicating', function() {
         it('indicates when server is connected', function() {
-            Puotiradiaattori.connection.open();
+            openConnection()
             expect($('#connection').html()).toBe('CONNECTED');
         });
         it('indicates when server is disconnected', function() {
-            Puotiradiaattori.connection.open();
-            Puotiradiaattori.connection.close();
+            openConnection()
+            closeConnection()
             expect($('#connection').html()).toBe('DISCONNECTED');
         });
     });
@@ -49,7 +57,7 @@ describe('Puotiradiaattori', function () {
         it('tries to reconnect after 50000ms', function() {
             jasmine.Clock.useMock();
             spyOn(Puotiradiaattori.connection, 'connect');
-            Puotiradiaattori.connection.close();
+            closeConnection()
             jasmine.Clock.tick(50000);
             expect(Puotiradiaattori.connection.connect).toHaveBeenCalled();
         });
@@ -71,13 +79,19 @@ describe('Sound', function() {
 });
 
 function spinCounters(json) {
-    Puotiradiaattori.connection.message(fakeJSON(json));
+    toMessageBus(fakeJSON(json));
 }
-
 function fakeJSON(obj) {
-    var message = {};
-    message.data = JSON.stringify(obj);
-    return message;
+    return {'type': 'message', 'data': JSON.stringify(obj)}
+}
+function closeConnection() {
+    toMessageBus({'type': 'close'});
+}
+function openConnection() {
+    toMessageBus({'type': 'open'});
+}
+function toMessageBus(msg) {
+    Puotiradiaattori.connection.bus.push(msg)
 }
 
 $.fn.digitsInSpinner = function() {
