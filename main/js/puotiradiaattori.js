@@ -15,6 +15,10 @@ var Puotiradiaattori = function (settings) {
     var sound = Sound(settings.sound);
     var socket = SocketBus(settings.serverUrl);
 
+    var counters = socket.message.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
+    var needsMoreSpinners = counters.filter(needMoreSpinners).do(addSpinner);
+    var allMessages = counters.merge(needsMoreSpinners).skipDuplicates();
+
     $("#counters").html(html);
     showDisconnectMessage();
     sound.play();
@@ -24,11 +28,9 @@ var Puotiradiaattori = function (settings) {
     socket.close.onValue(showDisconnectMessage);
     socket.close.onValue(reconnect);
 
-    var counters = socket.message.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
-    var needsMoreSpinners = counters.filter(needMoreSpinners);
     needsMoreSpinners.onValue(function() {sound.play()});
-    needsMoreSpinners.onValue(addSpinner);
-    counters.onValue(spin);
+
+    allMessages.onValue(spin);
 
     function counterElementAndDigitsToSpin(message) {
         return {'element':$('#' + _.keys(message)), 'digitsToSpin':_.values(message).toString().split('')}
@@ -40,7 +42,7 @@ var Puotiradiaattori = function (settings) {
         var spinners = counter.element.find('.spinner');
         var digitsToSpin = counter.digitsToSpin;
         var spinnersToAdd = spinners.length + (digitsToSpin.length - spinners.length);
-        counter.element.find('.counter').html(createSpinners(spinnersToAdd));
+        return counter.element.find('.counter').html(createSpinners(spinnersToAdd));
     }
 
     function spin(counter) {
