@@ -45,6 +45,9 @@ describe('Puotiradiaattori', function () {
         });
     });
     describe('server connection indicating', function() {
+        it('shows initial state to be disconnected', function() {
+            expect($('#connection').html()).toBe('DISCONNECTED');
+        });
         it('indicates when server is connected', function() {
             openConnection()
             expect($('#connection').html()).toBe('CONNECTED');

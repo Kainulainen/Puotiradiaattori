@@ -16,6 +16,7 @@ var Puotiradiaattori = function (settings) {
     var socket = SocketBus(settings.serverUrl);
 
     $("#counters").html(html);
+    showDisconnectMessage();
     sound.play();
     socket.connect();
 
