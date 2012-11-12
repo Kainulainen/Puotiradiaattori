@@ -36,7 +36,7 @@ describe('Puotiradiaattori', function () {
             expect(puotiradiaattori.sound.play).toHaveBeenCalled();
         });
     });
-    describe('updating multipile counters at once', function() {
+    describe('updating multiple counters at once', function() {
         it('sets today to 345', function() {
             expect($('#today').counterDigits()).toBe('0000000345');
         });
