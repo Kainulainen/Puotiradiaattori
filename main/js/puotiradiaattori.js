@@ -16,7 +16,7 @@ var Puotiradiaattori = function (settings) {
     var socket = SocketBus(settings.serverUrl);
 
     var counters = socket.message.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
-    var needsMoreSpinners = counters.filter(needMoreSpinners).do(addSpinner);
+    var needsMoreSpinners = counters.filter(hasMoreDigitsThanSpinners).do(addSpinner);
     var allMessages = counters.merge(needsMoreSpinners).skipDuplicates();
 
     $("#counters").html(html);
@@ -36,7 +36,7 @@ var Puotiradiaattori = function (settings) {
         return {'element':$('#' + _.keys(message)), 'digitsToSpin':_.values(message).toString().split('')}
     }
 
-    function needMoreSpinners(counter) {return counter.digitsToSpin.length > counter.element.find('.spinner').length;}
+    function hasMoreDigitsThanSpinners(counter) {return counter.digitsToSpin.length > counter.element.find('.spinner').length;}
 
     function addSpinner(counter) {
         var spinners = counter.element.find('.spinner');
