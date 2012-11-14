@@ -16,8 +16,8 @@ var Puotiradiaattori = function (settings) {
     var socket = SocketBus(settings.serverUrl);
 
     var counters = socket.message.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
-    var needsMoreSpinners = counters.filter(hasMoreDigitsThanSpinners).do(addSpinner);
-    var allMessages = counters.merge(needsMoreSpinners).skipDuplicates();
+    var countersWithAddedSpinners = counters.filter(hasMoreDigitsThanSpinners).do(addSpinner);
+    var allMessages = counters.merge(countersWithAddedSpinners).skipDuplicates();
 
     $("#counters").html(html);
     showDisconnectMessage();
@@ -28,7 +28,7 @@ var Puotiradiaattori = function (settings) {
     socket.close.onValue(showDisconnectMessage);
     socket.close.onValue(reconnect);
 
-    needsMoreSpinners.onValue(function() {sound.play()});
+    countersWithAddedSpinners.onValue(function() {sound.play()});
 
     allMessages.onValue(spin);
 
