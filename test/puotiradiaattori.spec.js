@@ -5,8 +5,8 @@ describe('Puotiradiaattori', function () {
         spinCounters({"today":345, 'week': 456});
     });
     describe('creating counters', function() {
-        it('creates spinner with numbers in order from 0 to 9', function() {
-            expect($('#today').digitsInSpinner()).toEqual('0123456789');
+        it('creates spinner with 10 digits', function() {
+            expect($('#today').digitsInSpinner()).toEqual(10);
         });
     });
     describe('counter configuration', function() {
@@ -101,9 +101,7 @@ function toMessageBus(msg) {
 function assertConnectionIndication(text) {expect($('#connection').html()).toBe(text);}
 
 $.fn.digitsInSpinner = function() {
-    return $.map($(this).find('.spinner:first .plane'), function(element) {
-        return $(element).attr('class').split('digit-')[1]
-    }).join('');
+    return $(this).find('.spinner:first .digit').length
 }
 
 $.fn.counterDigits = function() {

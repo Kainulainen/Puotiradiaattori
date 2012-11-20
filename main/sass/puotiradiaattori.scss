@@ -27,7 +27,7 @@ h1 {margin:0 auto; font:{size: 3em; weight: normal}; color: #fff; @include text-
   &:last-child {margin-left:0;}
 }
 
-.plane {display: table; position: absolute;
+.digit {display: table; position: absolute;
   width: $planeWidth;
   height: $planeHeight;
   @include backface-visibility(hidden);
@@ -47,10 +47,11 @@ h1 {margin:0 auto; font:{size: 3em; weight: normal}; color: #fff; @include text-
   }
 }
 
-@for $plane from 0 through 9 {
-   $angle: $plane * 36;
+@for $digit from 0 through 9 {
+   $angle: $digit * 36;
    $tenGonInRadius: 1.53884;
+   $nthChildOfSpinner: $digit + 1;
 
-   .digit-#{$plane} {@include transform(rotateX(#{$angle}deg) translateZ($planeHeight * $tenGonInRadius))}
-   .spinner.roll-to-#{$plane} {@include transition(all 3s ease-in); @include transform(rotateX(-#{$angle}deg))}
+   .digit:nth-child(#{$nthChildOfSpinner}) {@include transform(rotateX(#{$angle}deg) translateZ($planeHeight * $tenGonInRadius))}
+   .spinner.roll-to-#{$digit} {@include transition(all 3s ease-in); @include transform(rotateX(-#{$angle}deg))}
 }
