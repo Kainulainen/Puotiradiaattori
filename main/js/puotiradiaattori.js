@@ -1,16 +1,14 @@
-var Config = {
-    'serverUrl':'ws://127.0.0.1:1337',
-    'sound': true,
-    'counters':[
-        {'label':'tänään', 'id':'today', digits:10},
-        {'label':'viikko', 'id':'week', digits:10},
-        {'label':'kuukausi', 'id':'month', digits:10},
-        {'label':'vuosi', 'id':'year', digits:10},
-        {'label':'kaikki', 'id':'total', digits:10}
-    ]
-}
+define(function(require) {
+   return {run: function() {
+    var settings = require('settings')
+    var $ = require('jquery')
+    var _ = require('underscore')
+    var Bacon = require('Bacon')
+    Bacon.splitByKey = require('Bacon.splitByKey')
+    Bacon.skipDuplicates = require('Bacon.skipDuplicates')
+    var Sound = require('sound')
+    var SocketBus = require('socket')
 
-var Puotiradiaattori = function (settings) {
     var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits)).end();});
     var sound = Sound(settings.sound);
     var socket = SocketBus(settings.serverUrl);
@@ -69,6 +67,5 @@ var Puotiradiaattori = function (settings) {
     function toJSON(message) {return JSON.parse(message.data);}
 
     return {connection: socket, sound: sound};
-
-};
-Puotiradiaattori(Config);
+   }}
+})
