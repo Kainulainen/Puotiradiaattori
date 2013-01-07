@@ -10,20 +10,6 @@
 <body>
 <section id="counters"></section>
 <section id="connection"></section>
-<script type="text/template" id='counter'>
-    <section class="puotiradiaattori" id="<%= id %>">
-        <h1><%= label %></h1>
-        <div class="counter">
-        </div><abbr class="currency" title="EUR">€</abbr>
-    </section>
-</script>
-<script type="text/template" id='spinner'>
-    <div class="spinner">
-        <% _.times(10, function(){ %>
-        <span class="digit"><span class="number"></span></span>
-        <% }); %>
-    </div>
-</script>
 <script data-main="js/app" src="js/lib/require.js"></script>
 </body>
 </html>

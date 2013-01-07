@@ -3,11 +3,14 @@ define(function(require) {
     var settings = require('settings')
     var $ = require('jquery')
     var _ = require('underscore')
+    var tpl = require('tpl')
     var Bacon = require('Bacon')
     Bacon.splitByKey = require('Bacon.splitByKey')
     Bacon.skipDuplicates = require('Bacon.skipDuplicates')
     var Sound = require('sound')
     var SocketBus = require('socket')
+    var spinnerTemplate = require('tpl!spinner.html');
+    var counterTemplate = require('tpl!counter.html');
 
     var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits)).end();});
     var sound = Sound(settings.sound);
@@ -56,9 +59,9 @@ define(function(require) {
         function zeros(count) {return $.map(new Array(count), function () {return '0'});}
     }
 
-    function createOneCounter(counter) {return _.template($("#counter").html(), counter)}
+    function createOneCounter(counter) {return counterTemplate(counter)}
     function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
-    function createOneSpinner() {return _.template($("#spinner").html(), {});}
+    function createOneSpinner() {return spinnerTemplate();}
 
     function showConnectedMessage() {$('#connection').html('CONNECTED');}
     function showDisconnectMessage() {$('#connection').html('DISCONNECTED');}
