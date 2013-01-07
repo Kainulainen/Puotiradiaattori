@@ -1,8 +1,8 @@
 require.config({
     'paths': {
-        'jasmine': 'test/jasmine-1.2.0/jasmine',
-        'jasmine.html': 'test/jasmine-1.2.0/jasmine-html',
-        'jasmine.jquery': 'test/jasmine-1.2.0/jasmine-jquery-1.3.1'
+        'jasmine': 'test/jasmine-1.3.1/jasmine',
+        'jasmine.html': 'test/jasmine-1.3.1/jasmine-html',
+        'jasmine.jquery': 'test/jasmine-1.3.1/jasmine-jquery-1.3.1'
     },
     'shim': {
         'jasmine.html': ['jasmine'],
@@ -13,7 +13,7 @@ require.config({
 
 define(function (require) {
     var $ = require('jquery');
-    $('<link rel="stylesheet" type="text/css" href="js/test/jasmine-1.2.0/jasmine.css" />').prependTo('head');
+    $('<link rel="stylesheet" type="text/css" href="js/test/jasmine-1.3.1/jasmine.css" />').prependTo('head');
 
     require(['jasmine', 'jasmine.html', 'jasmine.jquery', 'test/puotiradiaattori.spec'], function () {
         var jasmineEnv = jasmine.getEnv();
