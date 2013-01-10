@@ -16,16 +16,15 @@ require.config({
     }
 
 });
-(function () {
+define(function(require) {
+    var _ = require('underscore')
+    var isProdEnv = document.location.href.match('runTests') == null
     var prodFiles = ['puotiradiaattori']
-    var testFiles = ['puotiradiaattori', 'test/runner']
-    var isTestEnv = document.location.href.match('runTests') != null;
+    var testFiles = _.union(prodFiles, 'test/runner')
 
-    if (isTestEnv) {
-        require(testFiles)
+    if (isProdEnv) {
+        require(prodFiles, function (puoti) {puoti.run()})
     } else {
-        require(prodFiles, function (puoti) {
-            puoti.run()
-        })
+        require(testFiles)
     }
-})()
+})
