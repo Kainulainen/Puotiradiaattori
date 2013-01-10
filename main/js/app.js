@@ -10,7 +10,6 @@ require.config({
         'sound': 'lib/sound'
     },
     shim: {
-        'underscore': {exports: '_'},
         'Bacon.splitByKey': ['Bacon'],
         'Bacon.skipDuplicates': ['Bacon']
     }
