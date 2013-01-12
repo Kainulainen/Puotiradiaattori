@@ -6,7 +6,7 @@ define(function (require) {
 
     describe('Puotiradiaattori', function () {
         beforeEach(function () {
-            puotiradiaattori = require('puotiradiaattori').run();
+            puotiradiaattori = require('puotiradiaattori').init();
             spinCounters({"today": 345, 'week': 456});
         });
         describe('creating counters', function () {

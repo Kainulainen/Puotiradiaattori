@@ -29,7 +29,7 @@ define(function(require) {
     var testFiles = _.union(prodFiles, 'test/runner')
 
     if (isProdEnv) {
-        require(prodFiles, function (puoti) {puoti.run()})
+        require(prodFiles, function (puoti) {puoti.init()})
     } else {
         require(testFiles)
     }

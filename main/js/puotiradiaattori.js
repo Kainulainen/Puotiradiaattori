@@ -1,5 +1,5 @@
 define(function(require) {
-   return {run: function() {
+   return {init: function() {
     var settings = require('settings')
     var $ = require('jquery')
     var _ = require('underscore')
