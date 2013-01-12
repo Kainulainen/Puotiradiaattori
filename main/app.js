@@ -1,4 +1,5 @@
 require.config({
+    baseUrl: 'js',
     paths: {
         'jquery': 'lib/jquery-1.8.3.min',
         'underscore': 'lib/lodash.min',
