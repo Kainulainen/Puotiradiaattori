@@ -22,15 +22,10 @@ require.config({
     }
 
 });
-define(function(require) {
-    var _ = require('underscore')
-    var isProdEnv = document.location.href.match('runTests') == null
-    var prodFiles = ['puotiradiaattori']
-    var testFiles = _.union(prodFiles, 'test/runner')
+require(['puotiradiaattori'], function(puotiradiaattori) {
+    puotiradiaattori.init();
 
-    if (isProdEnv) {
-        require(prodFiles, function (puoti) {puoti.init()})
-    } else {
-        require(testFiles)
-    }
+    var isTestEnv = document.location.href.match('runTests') != null
+    if (isTestEnv)
+        require(['test/runner'])
 })
