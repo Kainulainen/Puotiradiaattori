@@ -14,6 +14,12 @@ define(function (require) {
             it('creates spinner with 10 digits', function () {
                 expect($('#today').digitsInSpinner()).toEqual(10);
             });
+            it('defaults to 4 digits if digit count is not set', function() {
+                delete settings.counters[0].digits;
+                puotiradiaattori = require('puotiradiaattori').init();
+                expect($('#today').find('.spinner').length).toEqual(4);
+                settings.counters[0].digits = 10;
+            });
         });
         describe('counter settings configuration', function () {
             it('labels counter', function () {

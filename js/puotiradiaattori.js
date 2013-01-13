@@ -12,7 +12,7 @@ define(function(require) {
     var spinnerTemplate = require('tpl!spinner.html');
     var counterTemplate = require('tpl!counter.html');
 
-    var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits)).end();});
+    var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits || 4)).end();});
     var sound = Sound(settings.sound);
     var socket = SocketBus(settings.serverUrl);
 
