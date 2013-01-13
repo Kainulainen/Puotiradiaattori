@@ -1,4 +1,5 @@
 define(function (require) {
+    var puotiradiaattori;
     var settings = require('settings');
     var $ = require('jquery');
     var _ = require('underscore');
