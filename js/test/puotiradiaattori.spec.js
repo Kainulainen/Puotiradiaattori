@@ -3,7 +3,6 @@ define(function (require) {
     var settings = require('settings');
     var $ = require('jquery');
     var _ = require('underscore');
-    var Sound = require('sound');
 
     describe('Puotiradiaattori', function () {
         beforeEach(function () {
@@ -78,20 +77,6 @@ define(function (require) {
                 jasmine.Clock.tick(50000);
                 expect(puotiradiaattori.connection.connect).toHaveBeenCalled();
             });
-        });
-    });
-
-    describe('Sound', function () {
-        it('can be set to on by default', function () {
-            expect(Sound(true).isOn()).toBeTruthy();
-        });
-        it('can be set to off by default', function () {
-            expect(Sound(false).isOn()).toBeFalsy();
-        });
-        it('can be toggled', function () {
-            var sound = Sound(false);
-            sound.toggle();
-            expect(sound.isOn()).toBeTruthy();
         });
     });
 
