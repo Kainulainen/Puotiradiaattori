@@ -2,8 +2,8 @@ require.config({
     baseUrl: 'js',
     paths: {
         'jquery': [
-            'http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
-            'lib/jquery-1.8.3.min'
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min',
+            'lib/jquery-1.9.0.min'
         ],
         'underscore': [
             'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.0.0-rc.3/lodash.min',
