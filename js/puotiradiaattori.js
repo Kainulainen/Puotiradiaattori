@@ -7,15 +7,12 @@ define(function(require) {
     var Bacon = require('Bacon')
     Bacon.splitByKey = require('Bacon.splitByKey')
     Bacon.skipDuplicates = require('Bacon.skipDuplicates')
-    var Sound = require('sound')
-    var SocketBus = require('socket')
     var spinnerTemplate = require('tpl!spinner.html');
     var counterTemplate = require('tpl!counter.html');
+    var sound = require('sound')(settings.sound)
+    var socket = require('socket')(settings.serverUrl)
 
     var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits || 4)).end();});
-    var sound = Sound(settings.sound);
-    var socket = SocketBus(settings.serverUrl);
-
     var counters = socket.message.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
     var countersWithAddedSpinners = counters.filter(hasMoreDigitsThanSpinners).do(addSpinner);
     var allMessages = counters.merge(countersWithAddedSpinners).skipDuplicates();
