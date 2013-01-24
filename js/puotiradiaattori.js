@@ -18,14 +18,14 @@ define(function(require) {
     var allMessages = counters.merge(countersWithAddedSpinners).skipDuplicates();
 
     $("#counters").html(html);
-    sound.play();
     socket.connect();
 
+    socket.open.onValue(playSound);
     socket.open.onValue(showConnectedMessage);
     socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
 
-    countersWithAddedSpinners.onValue(function() {sound.play()});
+    countersWithAddedSpinners.onValue(playSound);
 
     allMessages.onValue(spin);
 
@@ -62,6 +62,8 @@ define(function(require) {
     function showConnectedMessage() {$('#connection').html('CONNECTED');}
     function showDisconnectMessage() {$('#connection').html('DISCONNECTED');}
     function reconnect() {setTimeout(socket.connect, 50000);}
+
+    function playSound() {sound.play()}
 
     function toJSON(message) {return JSON.parse(message.data);}
 
