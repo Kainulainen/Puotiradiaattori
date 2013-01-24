@@ -80,21 +80,14 @@ define(function (require) {
         });
     });
 
-    function spinCounters(json) {
-        toMessageBus(fakeJSON(json));
-    }
-
-    function fakeJSON(obj) {
-        return {'type': 'message', 'data': JSON.stringify(obj)}
-    }
+    function spinCounters(json) {toMessageBus(fakeJSON(json));}
+    function fakeJSON(obj) {return {'type': 'message', 'data': JSON.stringify(obj)}}
 
     function connectionError() {toMessageBus({'type': 'error'});}
     function openConnection() {toMessageBus({'type': 'open'});}
     function closeConnection() {toMessageBus({'type': 'close'});}
 
-    function toMessageBus(msg) {
-        puotiradiaattori.connection.bus.push(msg)
-    }
+    function toMessageBus(msg) {puotiradiaattori.connection.bus.push(msg)}
 
     function assertConnectionIndication(text) {
         expect($('#connection').html()).toBe(text);
