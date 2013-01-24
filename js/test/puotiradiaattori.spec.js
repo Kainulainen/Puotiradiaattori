@@ -73,7 +73,7 @@ define(function (require) {
             it('tries to reconnect after 50000ms', function () {
                 jasmine.Clock.useMock();
                 spyOn(puotiradiaattori.connection, 'connect');
-                closeConnection()
+                connectionError()
                 jasmine.Clock.tick(50000);
                 expect(puotiradiaattori.connection.connect).toHaveBeenCalled();
             });
@@ -88,13 +88,9 @@ define(function (require) {
         return {'type': 'message', 'data': JSON.stringify(obj)}
     }
 
-    function closeConnection() {
-        toMessageBus({'type': 'close'});
-    }
-
-    function openConnection() {
-        toMessageBus({'type': 'open'});
-    }
+    function connectionError() {toMessageBus({'type': 'error'});}
+    function openConnection() {toMessageBus({'type': 'open'});}
+    function closeConnection() {toMessageBus({'type': 'close'});}
 
     function toMessageBus(msg) {
         puotiradiaattori.connection.bus.push(msg)

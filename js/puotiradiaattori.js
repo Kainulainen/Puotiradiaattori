@@ -24,7 +24,7 @@ define(function(require) {
 
     socket.open.onValue(showConnectedMessage);
     socket.close.onValue(showDisconnectMessage);
-    socket.close.onValue(reconnect);
+    socket.error.onValue(reconnect);
 
     countersWithAddedSpinners.onValue(function() {sound.play()});
 
