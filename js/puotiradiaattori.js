@@ -17,17 +17,16 @@ define(function(require) {
     var countersWithAddedSpinners = counters.filter(hasMoreDigitsThanSpinners).do(addSpinner);
     var allMessages = counters.merge(countersWithAddedSpinners).skipDuplicates();
 
-    $("#counters").html(html);
-    socket.connect();
-
     socket.open.onValue(playSound);
     socket.open.onValue(showConnectedMessage);
     socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
 
     countersWithAddedSpinners.onValue(playSound);
-
     allMessages.onValue(spin);
+
+    $("#counters").html(html);
+    socket.connect();
 
     function counterElementAndDigitsToSpin(message) {
         return {'element':$('#' + _.keys(message)), 'digitsToSpin':_.values(message).toString().split('')}
