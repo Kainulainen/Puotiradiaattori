@@ -18,12 +18,11 @@ define(function(require) {
     var allMessages = counters.merge(countersWithAddedSpinners).skipDuplicates();
 
     $("#counters").html(html);
-    showDisconnectMessage();
     sound.play();
     socket.connect();
 
     socket.open.onValue(showConnectedMessage);
-    socket.close.onValue(showDisconnectMessage);
+    socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
 
     countersWithAddedSpinners.onValue(function() {sound.play()});
