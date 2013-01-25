@@ -1,12 +1,12 @@
 define(function (require) {
-    var puotiradiaattori;
+    var puotiradiaattori = require('puotiradiaattori')
+    var app = puotiradiaattori.init();
     var settings = require('settings');
     var $ = require('jquery');
     var _ = require('underscore');
-
     describe('Puotiradiaattori', function () {
         beforeEach(function () {
-            puotiradiaattori = require('puotiradiaattori').init();
+            puotiradiaattori.init();
             spinCounters({"today": 345, 'week': 456});
         });
         describe('creating counters', function () {
@@ -15,7 +15,7 @@ define(function (require) {
             });
             it('defaults to 4 digits if digit count is not set', function() {
                 delete settings.counters[0].digits;
-                puotiradiaattori = require('puotiradiaattori').init();
+                puotiradiaattori.init();
                 expect($('#today').find('.spinner').length).toEqual(4);
                 settings.counters[0].digits = 10;
             });
@@ -42,9 +42,9 @@ define(function (require) {
                 expect($('#today').counterDigits()).toBe('34234980980');
             });
             it('plays sound when new digits are added', function () {
-                spyOn(puotiradiaattori.sound, 'play');
+                spyOn(app.sound, 'play');
                 spinCounters({"today": 134234980980});
-                expect(puotiradiaattori.sound.play).toHaveBeenCalled();
+                expect(app.sound.play).toHaveBeenCalled();
             });
         });
         describe('updating multiple counters at once', function () {
@@ -72,25 +72,54 @@ define(function (require) {
         describe('reconnecting to server', function () {
             it('tries to reconnect after 50000ms', function () {
                 jasmine.Clock.useMock();
-                spyOn(puotiradiaattori.connection, 'connect');
+                spyOn(app.connection, 'connect');
                 connectionError()
                 jasmine.Clock.tick(50000);
-                expect(puotiradiaattori.connection.connect).toHaveBeenCalled();
+                expect(app.connection.connect).toHaveBeenCalled();
             });
         });
+        describe('timestamp of the last update', function() {
+            it('updates shown timestamp when new data is recieved', function() {
+                expect($('#timeSinceLastUpdate').text()).toBe('just now')
+            })
+            it('shows a pretty date which is updated every minute since the last update time', function() {
+                spinCounters({"today": 134234980980}, modifyCurrentTimeInMinutes(-1));
+                expect($('#timeSinceLastUpdate').text()).toBe('a minute ago')
+            })
+        })
     });
 
-    function spinCounters(json) {toMessageBus(fakeJSON(json));}
-    function fakeJSON(obj) {return {'type': 'message', 'data': JSON.stringify(obj)}}
+    function spinCounters(json, time) {toMessageBus(fakeJSON(json, time));}
+    function fakeJSON(obj, time) {return {'type':'message','data':JSON.stringify({'puoti':obj,'time': formattedDate(time || new Date())})};} //2013-01-24T09:49:18Z
 
     function connectionError() {toMessageBus({'type': 'error'});}
     function openConnection() {toMessageBus({'type': 'open'});}
     function closeConnection() {toMessageBus({'type': 'close'});}
 
-    function toMessageBus(msg) {puotiradiaattori.connection.bus.push(msg)}
+    function toMessageBus(msg) {app.connection.bus.push(msg)}
 
     function assertConnectionIndication(text) {
         expect($('#connection').html()).toBe(text);
+    }
+
+    function formattedDate(date) {
+        return date.getFullYear()
+                + '-' + pad( date.getMonth() + 1 )
+                + '-' + pad( date.getDate() )
+                + 'T' + pad( date.getHours() )
+                + ':' + pad( date.getMinutes() )
+                + ':' + pad( date.getSeconds() )
+                + 'Z';
+    }
+
+    function pad(number) {
+        var r = String(number);
+        return (r.length === 1) ? r = '0' + r : r;
+    }
+
+    function modifyCurrentTimeInMinutes(minutes) {
+        var date = new Date();
+        return new Date(date.getTime() + minutes * 60000);
     }
 
     $.fn.digitsInSpinner = function () {

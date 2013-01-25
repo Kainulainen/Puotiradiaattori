@@ -14,7 +14,8 @@ require.config({
         'Bacon.skipDuplicates': 'lib/Bacon.skipDuplicates',
         'tpl': 'lib/tpl-custom',
         'socket': 'lib/socket',
-        'sound': 'lib/sound'
+        'sound': 'lib/sound',
+        'pretty': 'lib/pretty'
     },
     shim: {
         'Bacon.splitByKey': ['Bacon'],

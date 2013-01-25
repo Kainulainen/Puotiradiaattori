@@ -11,11 +11,19 @@ define(function(require) {
     var counterTemplate = require('tpl!counter.html');
     var sound = require('sound')(settings.sound)
     var socket = require('socket')(settings.serverUrl)
+    var prettyDate = require('pretty')
 
     var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter.digits || 4)).end();});
-    var counters = socket.message.map(toJSON).splitByKey().map(counterElementAndDigitsToSpin);
+
+    var message = socket.message.map(toJSON);
+    var puoti = message.map(".puoti");
+    var counters = puoti.splitByKey().map(counterElementAndDigitsToSpin);
     var countersWithAddedSpinners = counters.filter(hasMoreDigitsThanSpinners).do(addSpinner);
     var allMessages = counters.merge(countersWithAddedSpinners).skipDuplicates();
+
+    var timeOfLastMessage = message.map(".time").toProperty();
+    var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
+    everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
 
     socket.open.onValue(playSound);
     socket.open.onValue(showConnectedMessage);
@@ -64,6 +72,8 @@ define(function(require) {
     function playSound() {sound.play()}
 
     function toJSON(message) {return JSON.parse(message.data);}
+
+    function updateTimeSinceLastMessage(time) {$('#timeSinceLastUpdate').html(prettyDate(time))}
 
     return {connection: socket, sound: sound};
    }}
