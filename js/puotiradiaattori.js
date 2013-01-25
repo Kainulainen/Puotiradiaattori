@@ -55,8 +55,7 @@ define(function(require) {
     }
 
     function createOneCounter(counter) {return counterTemplate(counter)}
-    function createSpinners(digits) {return _.map(_.range(digits), createOneSpinner).join('');}
-    function createOneSpinner() {return spinnerTemplate();}
+    function createSpinners(digits) {return _.map(_.range(digits), spinnerTemplate).join('');}
 
     function showConnectedMessage() {$('#connection').html('CONNECTED');}
     function showDisconnectMessage() {$('#connection').html('DISCONNECTED');}
