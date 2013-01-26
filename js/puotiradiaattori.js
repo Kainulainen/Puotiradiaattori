@@ -18,7 +18,7 @@ define(function(require) {
     var message = socket.message.map(toJSON);
     var puoti = message.map(".puoti");
     var counters = puoti.splitByKey().map(counterElementAndDigitsToSpin);
-    var countersWithAddedSpinners = counters.filter(hasMoreDigitsThanSpinners).do(addSpinner);
+    var countersWithAddedSpinners = counters.filter(hasMoreDigitsThanSpinners).doAction(addSpinner);
     var allMessages = counters.merge(countersWithAddedSpinners).skipDuplicates();
 
     var timeOfLastMessage = message.map(".time").toProperty();
