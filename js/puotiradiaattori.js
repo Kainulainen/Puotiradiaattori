@@ -17,9 +17,9 @@ define(function(require) {
 
     var message = socket.message.map(toJSON);
     var puoti = message.map(".puoti");
-    var counters = puoti.splitByKey().map(counterElementAndDigitsToSpin);
-    var countersWithAddedSpinners = counters.filter(hasMoreDigitsThanSpinners).doAction(addSpinner);
-    var allMessages = counters.merge(countersWithAddedSpinners).skipDuplicates();
+    var counters = puoti.splitByKey().map(counterContainerAndDigitsToSpin);
+    var needSpinnerCountChange = counters.filter(digitsAndSpinnersCountDiffer).doAction(updateSpinners);
+    var allMessages = counters.merge(needSpinnerCountChange).skipDuplicates();
 
     var timeOfLastMessage = message.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
@@ -30,40 +30,47 @@ define(function(require) {
     socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
 
-    countersWithAddedSpinners.onValue(playSound);
+    needSpinnerCountChange.onValue(playSound);
     allMessages.onValue(spin);
 
     $("#counters").html(html);
     socket.connect();
 
-    function counterElementAndDigitsToSpin(message) {
-        return {'element':$('#' + _.keys(message)), 'digitsToSpin':_.values(message).toString().split('')}
+    function counterContainerAndDigitsToSpin(message) {
+        var counterId = _.keys(message);
+        return {
+            'id': counterId,
+            'container':$('#' + counterId),
+            'digitsToSpin':_.values(message).toString().split('')
+        }
     }
 
-    function hasMoreDigitsThanSpinners(counter) {return counter.digitsToSpin.length > counter.element.find('.spinner').length;}
+    function digitsAndSpinnersCountDiffer(counter) {return counter.digitsToSpin.length != spinners(counter.container).length;}
+    function updateSpinners(counter) {return counter.container.find('.counter').html(createSpinners(updatedNumberOfSpinners(counter)));}
 
-    function addSpinner(counter) {
-        var spinners = counter.element.find('.spinner');
-        var digitsToSpin = counter.digitsToSpin;
-        var spinnersToAdd = spinners.length + (digitsToSpin.length - spinners.length);
-        return counter.element.find('.counter').html(createSpinners(spinnersToAdd));
-    }
+   function updatedNumberOfSpinners(counter) {
+       var currentCount = spinners(counter.container).length;
+       var newCount = currentCount + (counter.digitsToSpin.length - currentCount);
+       var defaultCount = defaultDigits(counter);
+       return newCount > defaultCount ? newCount : defaultCount;
+   }
+
+   function defaultDigits(counter) {
+       return _.find(settings.counters, function(settingsCounter) {return settingsCounter.id == counter.id}).digits
+   }
 
     function spin(counter) {
-        var spinners = counter.element.find('.spinner');
-        var digitsToSpin = counter.digitsToSpin;
-        var allDigits = $.merge(zeros(spinners.length - digitsToSpin.length), digitsToSpin).reverse();
-        $(allDigits).each(rollOneSpinner);
-
-        function rollOneSpinner(index, selectedDigit) {
-            spinners.eq(index).removeClass().addClass('spinner roll-to-' + selectedDigit)
-        }
-
-        function zeros(count) {return $.map(new Array(count), function () {return '0'});}
+        var spinnerElements = spinners(counter.container);
+        var digits = _.flatten([zeros(spinnerElements.length - counter.digitsToSpin.length), counter.digitsToSpin]).reverse();
+        var updatedClasses = digits.map(function(digit) {return 'spinner roll-to-' + digit });
+        _.each(updatedClasses, function(updatedClass, index) {return spinnerElements.eq(index).attr('class', updatedClass)})
     }
 
     function createOneCounter(counter) {return counterTemplate(counter)}
-    function createSpinners(digits) {return _.map(_.range(digits), spinnerTemplate).join('');}
+    function createSpinners(digits) {return _.range(digits).map(spinnerTemplate).join('');}
+    function spinners(container) {return container.find('.spinner');}
+
+    function updateTimeSinceLastMessage(time) {$('#timeSinceLastUpdate').html(prettyDate(time))}
 
     function showConnectedMessage() {$('#connection').html('CONNECTED');}
     function showDisconnectMessage() {$('#connection').html('DISCONNECTED');}
@@ -72,8 +79,7 @@ define(function(require) {
     function playSound() {sound.play()}
 
     function toJSON(message) {return JSON.parse(message.data);}
-
-    function updateTimeSinceLastMessage(time) {$('#timeSinceLastUpdate').html(prettyDate(time))}
+    function zeros(count) {return _.range(count).map(function() {return '0'})}
 
     return {connection: socket, sound: sound};
    }}

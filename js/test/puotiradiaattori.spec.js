@@ -41,6 +41,11 @@ define(function (require) {
                 spinCounters({"today": 34234980980});
                 expect($('#today').counterDigits()).toBe('34234980980');
             });
+            it('removes spinners when there has been previously been more digits that the set default', function () {
+                spinCounters({"today": 12334234980980});
+                spinCounters({"today": 4980980});
+                expect($('#today').counterDigits()).toBe('0004980980');
+            });
             it('plays sound when new digits are added', function () {
                 spyOn(app.sound, 'play');
                 spinCounters({"today": 134234980980});
