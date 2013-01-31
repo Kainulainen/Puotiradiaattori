@@ -1,11 +1,9 @@
 Bacon.Observable.prototype.splitByKey = function() {
     return this.flatMap(function(object) {
-        var stream = Bacon.never()
-        _.each(object, function(value, key) {
+        return _.reduce(object, function(stream, value, key) {
             var newObj = {};
             newObj[key] = value;
-            stream = stream.concat(Bacon.once(newObj))
-        })
-        return stream
+            return stream.concat(Bacon.once(newObj))
+        }, Bacon.never())
     })
 }
