@@ -13,12 +13,6 @@ define(function (require) {
             it('creates spinner with 10 digits', function () {
                 expect($('#today').digitsInSpinner()).toEqual(10);
             });
-            it('defaults to 4 digits if digit count is not set', function() {
-                delete settings.counters[0].digits;
-                puotiradiaattori.init();
-                expect($('#today').find('.spinner').length).toEqual(4);
-                settings.counters[0].digits = 10;
-            });
         });
         describe('counter settings configuration', function () {
             it('labels counter', function () {
@@ -31,33 +25,41 @@ define(function (require) {
         describe('updating counter when new data is received', function () {
             it('increases counters', function () {
                 spinCounters({"today": 234980980});
-                expect($('#today').counterDigits()).toBe('0234980980');
+                waitForCountersToSpin(function() {
+                    expect($('#today').counterDigits()).toBe('0234980980');
+                })
             });
             it('decreases counter', function () {
                 spinCounters({"today": 34});
-                expect($('#today').counterDigits()).toBe('0000000034');
+                waitForCountersToSpin(function() {
+                    expect($('#today').counterDigits()).toBe('0000000034');
+                })
             });
             it('adds spinners when there are not enough digits', function () {
                 spinCounters({"today": 34234980980});
-                expect($('#today').counterDigits()).toBe('34234980980');
+                waitForCountersToSpin(function() {
+                    expect($('#today').counterDigits()).toBe('34234980980');
+                });
             });
             it('removes spinners when there has been previously been more digits that the set default', function () {
                 spinCounters({"today": 12334234980980});
                 spinCounters({"today": 4980980});
-                expect($('#today').counterDigits()).toBe('0004980980');
-            });
-            it('plays sound when new digits are added', function () {
-                spyOn(app.sound, 'play');
-                spinCounters({"today": 134234980980});
-                expect(app.sound.play).toHaveBeenCalled();
+                waitForCountersToSpin(function() {
+                    expect($('#today').counterDigits()).toBe('0004980980');
+                });
             });
         });
         describe('updating multiple counters at once', function () {
             it('sets today to 345', function () {
-                expect($('#today').counterDigits()).toBe('0000000345');
+                waitForCountersToSpin(function() {
+                    expect($('#today').counterDigits()).toBe('0000000345');
+                });
+
             });
             it('sets week to 456', function () {
-                expect($('#week').counterDigits()).toBe('0000000456');
+                waitForCountersToSpin(function() {
+                    expect($('#week').counterDigits()).toBe('0000000456');
+                });
             });
         });
         describe('server connection indicating', function () {
@@ -125,6 +127,11 @@ define(function (require) {
     function modifyCurrentTimeInMinutes(minutes) {
         var date = new Date();
         return new Date(date.getTime() + minutes * 60000);
+    }
+
+    function waitForCountersToSpin(f) {
+        waits(1000)
+        runs(f)
     }
 
     $.fn.digitsInSpinner = function () {
