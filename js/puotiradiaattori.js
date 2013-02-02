@@ -27,7 +27,7 @@ define(function(require) {
     socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
 
-    allMessages.onValue(spin);
+    allMessages.delay(1000).onValue(spin);
 
     $("#counters").html(html);
     socket.connect();
@@ -47,9 +47,7 @@ define(function(require) {
         var currentDigits = digitsToSpin(counter);
         var digits = _.flatten([zeros(spinnerElements.length - currentDigits.length), currentDigits]).reverse();
         var updatedClasses = digits.map(function(digit) {return 'spinner roll-to-' + digit });
-        setTimeout(function() {
-            _.each(updatedClasses, function(updatedClass, index) {return spinnerElements.eq(index).attr('class', updatedClass)})
-        }, 1000);
+        _.each(updatedClasses, function(updatedClass, index) {return spinnerElements.eq(index).attr('class', updatedClass)})
      }
 
     function createOneCounter(counter) {return counterTemplate(counter)}
