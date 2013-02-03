@@ -21,6 +21,12 @@ define(function (require) {
             it('sets counter digit count', function () {
                 expect($('#today').find('.spinner').length).toEqual(settings.counters[0].digits);
             });
+            it('sets unit', function() {
+                settings.counters[0].unit = "oravannahka";
+                puotiradiaattori.init();
+                expect($('#today').find('.unit').text()).toEqual('oravannahka');
+                settings.counters[0].unit = "€";
+            });
         });
         describe('updating counter when new data is received', function () {
             it('increases counters', function () {

@@ -18,7 +18,7 @@ h1 {margin:0 auto; font:{size: 3em; weight: normal}; color: #fff; @include text-
 }
 #week, #month, #year, #total {@include transform(scale(0.7,0.7)); margin-top: -3em;}
 
-.currency {border:0; display: inline-block; color: #fff; @include text-shadow(0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.4)); font-size: 4em;}
+.unit {border:0; display: inline-block; color: #fff; @include text-shadow(0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.4)); font-size: 4em;}
 
 // todo adjust perspective  -webkit-perspective: 800; -webkit-perspective-origin: 50% 225%;
 .counter {position: relative; display: inline-block; width: auto; height: auto; overflow: hidden; margin:0; padding:1px; border: $counterBorderThickness solid #ccc; @include border-radius(5px); background: #fff; @include box-shadow(inset 0 0 20px #000000);}
