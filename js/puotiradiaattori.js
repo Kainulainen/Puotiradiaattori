@@ -43,11 +43,11 @@ define(function(require) {
    }
 
     function spin(counter) {
-        var spinnerElements = byId(counter).find('.spinner');
+        var spinners = byId(counter).find('.spinner');
         var currentDigits = digitsToSpin(counter);
-        var digits = _.flatten([zeros(spinnerElements.length - currentDigits.length), currentDigits]).reverse();
+        var digits = _.flatten([zeros(spinners.length - currentDigits.length), currentDigits]).reverse();
         var updatedClasses = digits.map(function(digit) {return 'spinner roll-to-' + digit });
-        _.each(updatedClasses, function(updatedClass, index) {return spinnerElements.eq(index).attr('class', updatedClass)})
+        _.each(updatedClasses, function(updatedClass, index) {return spinners.eq(index).attr('class', updatedClass)})
      }
 
     function createOneCounter(counter) {return counterTemplate(counter)}
