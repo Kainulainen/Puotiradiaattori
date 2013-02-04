@@ -45,8 +45,8 @@ define(function(require) {
     function spin(counter) {
         var spinners = byId(counter).find('.spinner');
         var currentDigits = digitsToSpin(counter);
-        var digits = _.flatten([zeros(spinners.length - currentDigits.length), currentDigits]).reverse();
-        var updatedClasses = digits.map(function(digit) {return 'spinner roll-to-' + digit });
+        var updatedDigits = _.flatten([zeros(spinners.length - currentDigits.length), currentDigits]).reverse();
+        var updatedClasses = updatedDigits.map(function(digit) {return 'spinner roll-to-' + digit });
         _.each(updatedClasses, function(updatedClass, index) {return spinners.eq(index).attr('class', updatedClass)})
      }
 
