@@ -9,6 +9,7 @@ define(function(require) {
     Bacon.skipDuplicates = require('Bacon.skipDuplicates')
     var spinnerTemplate = require('tpl!spinner.html');
     var counterTemplate = require('tpl!counter.html');
+    var targetTemplate = require('tpl!target.html');
     var sound = require('sound')(settings.sound)
     var socket = require('socket')(settings.serverUrl)
     var prettyDate = require('pretty')
@@ -17,17 +18,20 @@ define(function(require) {
 
     var message = socket.message.map(toJSON);
     var allMessages = message.map(".puoti").splitByKey().doAction(updateSpinners);
-
     var timeOfLastMessage = message.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
+    var countersWithTarget = allMessages.filter(hasTarget);
+    var targetReached = countersWithTarget.filter(reachedTarget);
 
     socket.open.onValue(playSound);
     socket.open.onValue(showConnectedMessage);
     socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
-
     allMessages.delay(1000).onValue(spin);
+
+    countersWithTarget.onValue(showTargetValue);
+    targetReached.onValue(playSound);
 
     $("#counters").html(html);
     socket.connect();
@@ -38,7 +42,7 @@ define(function(require) {
 
    function updatedNumberOfSpinners(counter) {
        var newCount = digitsToSpin(counter).length;
-       var defaultCount = defaultDigits(counter);
+       var defaultCount = fromSettings(counter).digits;
        return newCount > defaultCount ? newCount : defaultCount;
    }
 
@@ -50,14 +54,19 @@ define(function(require) {
         _.each(updatedClasses, function(updatedClass, index) {return spinners.eq(index).attr('class', updatedClass)})
      }
 
-    function createOneCounter(counter) {return counterTemplate(counter)}
+    function showTargetValue(counter) {
+       byId(counter).find('.target').addClass('show').find('.value').text(toTarget(counter) + fromSettings(counter).unit).toggleClass('reached', reachedTarget(counter));
+    }
+
+    function createOneCounter(settingsCounter) {
+        return settingsCounter.target ? $(counterTemplate(settingsCounter)).append(targetTemplate(settingsCounter)).wrap('<div></div>').parent().html() : counterTemplate(settingsCounter);
+    }
     function createSpinners(counter, digits) {return _.range(digits).map(function(element, index) {
         return spinnerTemplate({currentDigit: byId(counter).find('.spinner').eq(index).attr('class') || 'spinner roll-to-0'})}).join('');
     }
     function byId(counter) {return $('#' + id(counter));}
     function id(counter) {return _.keys(counter);}
     function digitsToSpin(counter) {return _.values(counter).toString().split('');}
-    function defaultDigits(counter) {return _.find(settings.counters, function(settingsCounter) {return settingsCounter.id == id(counter)}).digits}
 
     function updateTimeSinceLastMessage(time) {$('#timeSinceLastUpdate').html(prettyDate(time))}
 
@@ -67,6 +76,11 @@ define(function(require) {
 
     function playSound() {sound.play()}
 
+    function reachedTarget(counter) {return toTarget(counter) >= 0 }
+    function toTarget(counter) {return (fromSettings(counter).target.value - _.values(counter)) * -1;}
+    function hasTarget(counter) {return typeof fromSettings(counter).target != 'undefined'}
+
+    function fromSettings(counter) {return _.find(settings.counters, function(settingsCounter) {return settingsCounter.id == id(counter)});}
     function toJSON(message) {return JSON.parse(message.data);}
     function zeros(count) {return _.range(count).map(function() {return '0'})}
 

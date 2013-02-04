@@ -19,6 +19,14 @@ h1 {margin:0 auto; font:{size: 3em; weight: normal}; color: #fff; @include text-
 #week, #month, #year, #total {@include transform(scale(0.7,0.7)); margin-top: -3em;}
 
 .unit {border:0; display: inline-block; color: #fff; @include text-shadow(0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.4)); font-size: 4em;}
+.target {@include opacity(0); @include border-radius(5px); width: 40%; background: #fff; display: inline-block; font-size: 1.5em; padding: 0.5em 1em; color: #000000;
+  &.show {@include opacity(1); @include single-transition(opacity, 2s, ease-out);}
+  .value { color: #ff0000;
+    &.reached {color: #008000;
+      &:before {content: "+"}
+    }
+  }
+}
 
 // todo adjust perspective  -webkit-perspective: 800; -webkit-perspective-origin: 50% 225%;
 .counter {position: relative; display: inline-block; width: auto; height: auto; overflow: hidden; margin:0; padding:1px; border: $counterBorderThickness solid #ccc; @include border-radius(5px); background: #fff; @include box-shadow(inset 0 0 20px #000000);}

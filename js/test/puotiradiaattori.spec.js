@@ -2,6 +2,7 @@ define(function (require) {
     var puotiradiaattori = require('puotiradiaattori')
     var app = puotiradiaattori.init();
     var settings = require('settings');
+    var todayCounter = settings.counters[0];
     var $ = require('jquery');
     var _ = require('underscore');
     describe('Puotiradiaattori', function () {
@@ -16,16 +17,16 @@ define(function (require) {
         });
         describe('counter settings configuration', function () {
             it('labels counter', function () {
-                expect($('#today').find('h1').text()).toBe(settings.counters[0].label);
+                expect($('#today').find('h1').text()).toBe(todayCounter.label);
             });
             it('sets counter digit count', function () {
-                expect($('#today').find('.spinner').length).toEqual(settings.counters[0].digits);
+                expect($('#today').find('.spinner').length).toEqual(todayCounter.digits);
             });
             it('sets unit', function() {
-                settings.counters[0].unit = "oravannahka";
-                puotiradiaattori.init();
-                expect($('#today').find('.unit').text()).toEqual('oravannahka');
-                settings.counters[0].unit = "€";
+                expect($('#today').find('.unit').text()).toEqual(todayCounter.unit);
+            });
+            it('sets target label', function() {
+                expect($('#today').find('.target .label').text()).toBe(todayCounter.target.label);
             });
         });
         describe('updating counter when new data is received', function () {
@@ -67,6 +68,43 @@ define(function (require) {
                     expect($('#week').counterDigits()).toBe('0000000456');
                 });
             });
+        });
+        describe('target', function () {
+            it('is optional', function() {
+                runWithoutSetting(todayCounter, 'target', function() {
+                    puotiradiaattori.init();
+                    spinCounters({"today": 1});
+                    expect($("#today").find('.target').length).toEqual(0);
+                })
+
+            })
+        });
+        describe('target value', function () {
+            describe('is over counter value', function() {
+                beforeEach(function() {spinCounters({"today": 10000});});
+
+                it('shows values over target', function() {
+                    expect($('#today').find('.target .value')).toHaveText('9000' + todayCounter.unit);
+                });
+                it('changes css class', function() {
+                    expect($('#today').find('.target .value')).toHaveClass('reached');
+                });
+                it('plays sound', function() {
+                    spyOn(app.sound, 'play');
+                    spinCounters({"today": 134234980980});
+                    expect(app.sound.play).toHaveBeenCalled();
+                });
+            });
+            describe('is less than counter value', function() {
+                beforeEach(function() {spinCounters({"today": 1});});
+
+                it('shows values less than target', function() {
+                    expect($('#today').find('.target .value')).toHaveText('-999' + todayCounter.unit);
+                });
+                it('changes css class', function() {
+                    expect($('#today').find('.target .value')).not.toHaveClass('reached');
+                });
+            })
         });
         describe('server connection indicating', function () {
             it('shows initial state to be disconnected', function () {
@@ -138,6 +176,13 @@ define(function (require) {
     function waitForCountersToSpin(f) {
         waits(1000)
         runs(f)
+    }
+
+    function runWithoutSetting(counter, setting, func) {
+        var savedSetting = counter[setting];
+        delete counter[setting];
+        func();
+        counter[setting] = savedSetting;
     }
 
     $.fn.digitsInSpinner = function () {
