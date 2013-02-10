@@ -1,0 +1,9 @@
+@mixin respond-to($breakpoint, $media: all) {
+  @media only #{$media} and ($breakpoint) {
+    @content;
+  }
+}
+
+@mixin checkersBackground($color) {
+  @include background(linear-gradient(45deg, $color 25%, transparent 25%, transparent), linear-gradient(-45deg, $color 25%, transparent 25%, transparent), linear-gradient(45deg, transparent 75%, $color 75%), linear-gradient(-45deg, transparent 75%, $color 75%));
+}
