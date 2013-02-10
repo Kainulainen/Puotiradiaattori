@@ -2,7 +2,8 @@ define(function (require) {
     var puotiradiaattori = require('puotiradiaattori')
     var app = puotiradiaattori.init();
     var settings = require('settings');
-    var todayCounter = settings.counters[0];
+    var today = settings.counters[0];
+    var week = settings.counters[1];
     var $ = require('jquery');
     var _ = require('underscore');
     describe('Puotiradiaattori', function () {
@@ -12,69 +13,69 @@ define(function (require) {
         });
         describe('creating counters', function () {
             it('creates spinner with 10 digits', function () {
-                expect($('#today').digitsInSpinner()).toEqual(10);
+                expect(counter(today.id).digitsInSpinner()).toEqual(10);
             });
         });
         describe('counter settings configuration', function () {
             it('labels counter', function () {
-                expect($('#today').find('h1').text()).toBe(todayCounter.label);
+                expect(counter(today.id).find('h1').text()).toBe(today.label);
             });
             it('sets counter digit count', function () {
-                expect($('#today').find('.spinner').length).toEqual(todayCounter.digits);
+                expect(counter(today.id).find('.spinner').length).toEqual(today.digits);
             });
             it('sets unit', function() {
-                expect($('#today').find('.unit').text()).toEqual(todayCounter.unit);
+                expect(counter(today.id).find('.unit').text()).toEqual(today.unit);
             });
             it('sets target label', function() {
-                expect($('#today').find('.target .label').text()).toBe(todayCounter.target.label);
+                expect(counter(today.id).find('.target .label').text()).toBe(today.target.label);
             });
         });
         describe('updating counter when new data is received', function () {
             it('increases counters', function () {
                 spinCounters({"today": 234980980});
                 waitForCountersToSpin(function() {
-                    expect($('#today').counterDigits()).toBe('0234980980');
+                    expect(counter(today.id).counterDigits()).toBe('0234980980');
                 })
             });
             it('decreases counter', function () {
                 spinCounters({"today": 34});
                 waitForCountersToSpin(function() {
-                    expect($('#today').counterDigits()).toBe('0000000034');
+                    expect(counter(today.id).counterDigits()).toBe('0000000034');
                 })
             });
             it('adds spinners when there are not enough digits', function () {
                 spinCounters({"today": 34234980980});
                 waitForCountersToSpin(function() {
-                    expect($('#today').counterDigits()).toBe('34234980980');
+                    expect(counter(today.id).counterDigits()).toBe('34234980980');
                 });
             });
             it('removes spinners when there has been previously been more digits that the set default', function () {
                 spinCounters({"today": 12334234980980});
                 spinCounters({"today": 4980980});
                 waitForCountersToSpin(function() {
-                    expect($('#today').counterDigits()).toBe('0004980980');
+                    expect(counter(today.id).counterDigits()).toBe('0004980980');
                 });
             });
         });
         describe('updating multiple counters at once', function () {
             it('sets today to 345', function () {
                 waitForCountersToSpin(function() {
-                    expect($('#today').counterDigits()).toBe('0000000345');
+                    expect(counter(today.id).counterDigits()).toBe('0000000345');
                 });
 
             });
             it('sets week to 456', function () {
                 waitForCountersToSpin(function() {
-                    expect($('#week').counterDigits()).toBe('0000000456');
+                    expect(counter(week.id).counterDigits()).toBe('0000000456');
                 });
             });
         });
         describe('target', function () {
             it('is optional', function() {
-                runWithoutSetting(todayCounter, 'target', function() {
+                runWithoutSetting(today, 'target', function() {
                     puotiradiaattori.init();
                     spinCounters({"today": 1});
-                    expect($("#today").find('.target').length).toEqual(0);
+                    expect(counter(today.id).find('.target').length).toEqual(0);
                 })
 
             })
@@ -84,10 +85,10 @@ define(function (require) {
                 beforeEach(function() {spinCounters({"today": 10000});});
 
                 it('shows values over target', function() {
-                    expect($('#today').find('.target .value')).toHaveText('9000' + todayCounter.unit);
+                    expect(counter(today.id).find('.target .value')).toHaveText('9000' + today.unit);
                 });
                 it('changes css class', function() {
-                    expect($('#today').find('.target .value')).toHaveClass('reached');
+                    expect(counter(today.id).find('.target .value')).toHaveClass('reached');
                 });
                 it('plays sound', function() {
                     spyOn(app.sound, 'play');
@@ -99,10 +100,10 @@ define(function (require) {
                 beforeEach(function() {spinCounters({"today": 1});});
 
                 it('shows values less than target', function() {
-                    expect($('#today').find('.target .value')).toHaveText('-999' + todayCounter.unit);
+                    expect(counter(today.id).find('.target .value')).toHaveText('-999' + today.unit);
                 });
                 it('changes css class', function() {
-                    expect($('#today').find('.target .value')).not.toHaveClass('reached');
+                    expect(counter(today.id).find('.target .value')).not.toHaveClass('reached');
                 });
             })
         });
@@ -184,6 +185,8 @@ define(function (require) {
         func();
         counter[setting] = savedSetting;
     }
+
+    function counter(counterId) {return $('#' + counterId);}
 
     $.fn.digitsInSpinner = function () {
         return $(this).find('.spinner:first .digit').length
