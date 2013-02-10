@@ -20,7 +20,6 @@ define(function(require) {
     var allMessages = message.map(".puoti").splitByKey().doAction(updateSpinners);
     var timeOfLastMessage = message.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
-    everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
     var countersWithTarget = allMessages.filter(hasTarget);
     var targetReached = countersWithTarget.filter(reachedTarget);
 
@@ -29,6 +28,8 @@ define(function(require) {
     socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
     allMessages.delay(1000).onValue(spin);
+
+    everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
 
     countersWithTarget.onValue(showTargetValue);
     targetReached.onValue(playSound);
