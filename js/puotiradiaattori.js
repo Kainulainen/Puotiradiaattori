@@ -56,7 +56,7 @@ define(function(require) {
      }
 
     function showTargetValue(counter) {
-       byId(counter).find('.target').addClass('show').find('.value').text(toTarget(counter) + fromSettings(counter).unit).toggleClass('reached', reachedTarget(counter));
+       byId(counter).find('.target').addClass('show').find('.value').text(targetPercent(counter).toFixed(1) + '%').toggleClass('reached', reachedTarget(counter));
     }
 
     function createOneCounter(settingsCounter) {
@@ -77,8 +77,8 @@ define(function(require) {
 
     function playSound() {sound.play()}
 
-    function reachedTarget(counter) {return toTarget(counter) >= 0 }
-    function toTarget(counter) {return (fromSettings(counter).target.value - _.values(counter)) * -1;}
+    function reachedTarget(counter) {return targetPercent(counter) >= 100 }
+    function targetPercent(counter) {return (_.values(counter) / fromSettings(counter).target.value) * 100;}
     function hasTarget(counter) {return typeof fromSettings(counter).target != 'undefined'}
 
     function fromSettings(counter) {return _.find(settings.counters, function(settingsCounter) {return settingsCounter.id == id(counter)});}

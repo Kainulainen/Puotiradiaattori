@@ -85,7 +85,7 @@ define(function (require) {
                 beforeEach(function() {spinCounters({"today": 10000});});
 
                 it('shows values over target', function() {
-                    expect(counter(today.id).find('.target .value')).toHaveText('9000' + today.unit);
+                    expect(counter(today.id).find('.target .value')).toHaveText('1000.0%');
                 });
                 it('changes css class', function() {
                     expect(counter(today.id).find('.target .value')).toHaveClass('reached');
@@ -100,7 +100,7 @@ define(function (require) {
                 beforeEach(function() {spinCounters({"today": 1});});
 
                 it('shows values less than target', function() {
-                    expect(counter(today.id).find('.target .value')).toHaveText('-999' + today.unit);
+                    expect(counter(today.id).find('.target .value')).toHaveText('0.1%');
                 });
                 it('changes css class', function() {
                     expect(counter(today.id).find('.target .value')).not.toHaveClass('reached');

@@ -40,9 +40,7 @@ h1 {margin:0 auto; font:{size: 3rem; weight: normal}; color: #fff; @include text
 .target {@include opacity(0); @include border-radius(5px); width: 40%; background: #fff; display: inline-block; font-size: 1.5em; padding: 0.5rem 1rem; color: #000000;
   &.show {@include opacity(1); @include single-transition(opacity, 2s, ease-out);}
   .value { color: #ff0000;
-    &.reached {color: #008000;
-      &:before {content: "+"}
-    }
+    &.reached {color: #008000;}
   }
 }
 
