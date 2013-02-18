@@ -13,12 +13,15 @@ define(function(require) {
     var sound = require('sound')(settings.sound)
     var socket = require('socket')(settings.serverUrl)
     var prettyDate = require('pretty')
+    var storage = require('storage')
 
     var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter, counter.digits)).end();});
 
     var message = socket.message.map(toJSON);
-    var allMessages = message.map(".puoti").splitByKey().doAction(updateSpinners);
-    var timeOfLastMessage = message.map(".time").toProperty();
+    var storedMessages = message.doAction(storage.save).toProperty(storage.fetch());
+
+    var allMessages = storedMessages.map(".puoti").splitByKey().doAction(updateSpinners);
+    var timeOfLastMessage = storedMessages.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
     var countersWithTarget = allMessages.filter(hasTarget);
     var targetReached = countersWithTarget.filter(reachedTarget);

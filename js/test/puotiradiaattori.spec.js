@@ -2,6 +2,7 @@ define(function (require) {
     var puotiradiaattori = require('puotiradiaattori')
     var app = puotiradiaattori.init();
     var settings = require('settings');
+    var storage = require('storage');
     var today = settings.counters[0];
     var week = settings.counters[1];
     var $ = require('jquery');
@@ -141,6 +142,31 @@ define(function (require) {
         })
     });
 
+    describe('saving spinner data to localstorage', function() {
+        beforeEach(puotiradiaattori.init);
+
+        it('returns nothing on first go', function() {
+            storage.clear();
+            expect(storage.fetch()).toBeFalsy();
+        })
+        it('saves last message recieved', function() {
+            storage.clear();
+            spinCounters({"today": 1, "week": 2}, new Date('2013-02-18T08:35:09Z'));
+            expect(storage.fetch()).toEqual({puoti :{today:1, week:2},time:'2013-02-18T10:35:09Z'} ) // todo fix timezone offset
+        })
+        it('shows previously saved counter values', function() {
+            waitForCountersToSpin(function() {
+                expect(counter(today.id).counterDigits()).toBe('0000000001');
+            })
+        })
+        it('shows previously saved time', function() {
+            waitForCountersToSpin(function() {
+                spinCounters({"today": 1, "week": 2}, modifyCurrentTimeInMinutes(-60));
+                assertLastUpdateIs('1 hour ago');
+            })
+        })
+    })
+
     function spinCounters(json, time) {toMessageBus(fakeJSON(json, time));}
     function fakeJSON(obj, time) {return {'type':'message','data':JSON.stringify({'puoti':obj,'time': formattedDate(time || new Date())})};} //2013-01-24T09:49:18Z
 
@@ -153,6 +179,7 @@ define(function (require) {
     function assertConnectionIndication(text) {
         expect($('#connection').html()).toBe(text);
     }
+    function assertLastUpdateIs(expected) {expect($('#timeSinceLastUpdate').text()).toBe(expected)}
 
     function formattedDate(date) {
         return date.getFullYear()

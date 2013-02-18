@@ -15,7 +15,8 @@ require.config({
         'tpl': 'lib/tpl-custom',
         'socket': 'lib/socket',
         'sound': 'lib/sound',
-        'pretty': 'lib/pretty'
+        'pretty': 'lib/pretty',
+        'storage': 'lib/storage'
     },
     shim: {
         'Bacon.splitByKey': ['Bacon'],
