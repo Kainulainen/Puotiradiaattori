@@ -133,11 +133,11 @@ define(function (require) {
         });
         describe('timestamp of the last update', function() {
             it('updates shown timestamp when new data is recieved', function() {
-                expect($('#timeSinceLastUpdate').text()).toBe('just now')
+                assertLastUpdateIs('just now')
             })
             it('shows a pretty date which is updated every minute since the last update time', function() {
                 spinCounters({"today": 134234980980}, modifyCurrentTimeInMinutes(-1));
-                expect($('#timeSinceLastUpdate').text()).toBe('a minute ago')
+                assertLastUpdateIs('a minute ago')
             })
         })
     });
