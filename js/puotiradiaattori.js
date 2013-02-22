@@ -17,9 +17,8 @@ define(function(require) {
 
     var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter, counter.digits)).end();});
 
-    var message = socket.message.map(toJSON);
-    var storedMessages = message.doAction(storage.save).toProperty(storage.fetch());
-
+    var parsedMessages = socket.message.map(toJSON);
+    var storedMessages = parsedMessages.doAction(storage.save).toProperty(storage.fetch());
     var allMessages = storedMessages.map(".puoti").splitByKey().doAction(updateSpinners);
     var timeOfLastMessage = storedMessages.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
