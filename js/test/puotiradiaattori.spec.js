@@ -152,7 +152,7 @@ define(function (require) {
         it('saves last message recieved', function() {
             storage.clear();
             spinCounters({"today": 1, "week": 2}, new Date('2013-02-18T08:35:09Z'));
-            expect(storage.fetch()).toEqual({puoti :{today:1, week:2},time:'2013-02-18T10:35:09Z'} ) // todo fix timezone offset
+            expect(storage.fetch()).toEqual({puoti :{today:1, week:2},time:'2013-02-18T08:35:09Z'} );
         })
         it('shows previously saved counter values', function() {
             waitForCountersToSpin(function() {
@@ -168,7 +168,7 @@ define(function (require) {
     })
 
     function spinCounters(json, time) {toMessageBus(fakeJSON(json, time));}
-    function fakeJSON(obj, time) {return {'type':'message','data':JSON.stringify({'puoti':obj,'time': formattedDate(time || new Date())})};} //2013-01-24T09:49:18Z
+    function fakeJSON(obj, time) {return {'type':'message','data':JSON.stringify({'puoti':obj,'time': formattedUTCDate(time || new Date())})};} //2013-01-24T09:49:18Z | ISO 8601
 
     function connectionError() {toMessageBus({'type': 'error'});}
     function openConnection() {toMessageBus({'type': 'open'});}
@@ -181,13 +181,13 @@ define(function (require) {
     }
     function assertLastUpdateIs(expected) {expect($('#timeSinceLastUpdate').text()).toBe(expected)}
 
-    function formattedDate(date) {
-        return date.getFullYear()
-                + '-' + pad( date.getMonth() + 1 )
-                + '-' + pad( date.getDate() )
-                + 'T' + pad( date.getHours() )
-                + ':' + pad( date.getMinutes() )
-                + ':' + pad( date.getSeconds() )
+    function formattedUTCDate(date) {
+        return date.getUTCFullYear()
+                + '-' + pad( date.getUTCMonth() + 1 )
+                + '-' + pad( date.getUTCDate() )
+                + 'T' + pad( date.getUTCHours() )
+                + ':' + pad( date.getUTCMinutes() )
+                + ':' + pad( date.getUTCSeconds() )
                 + 'Z';
     }
 

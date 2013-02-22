@@ -6,11 +6,12 @@
 
 // Takes an ISO time and returns a string representing how
 // long ago the date represents.
-define(function (require) {
+define(function () {
     return function (time) {
-        var date = new Date((time || "").replace(/-/g, "/").replace(/[TZ]/g, " ")),
-                diff = (((new Date()).getTime() - date.getTime()) / 1000),
-                day_diff = Math.floor(diff / 86400);
+        var UTC_date = new Date((time || "").replace(/-/g, "/").replace(/[TZ]/g, " "));
+        var timeZoneOffsetInMilliseconds = new Date().getTimezoneOffset() * 60000;
+        var diff = ((new Date().getTime() + timeZoneOffsetInMilliseconds) - UTC_date.getTime()) / 1000;
+        var day_diff = Math.floor(diff / 86400);
 
         if (isNaN(day_diff) || day_diff < 0 || day_diff >= 31)
             return;
