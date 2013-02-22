@@ -29,10 +29,9 @@ define(function(require) {
     socket.open.onValue(showConnectedMessage);
     socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
+
     puoti.delay(1000).onValue(spin);
-
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
-
     countersWithTarget.onValue(showTargetValue);
     targetReached.onValue(playSound);
 
