@@ -19,17 +19,17 @@ define(function(require) {
 
     var parsedMessages = socket.message.map(toJSON);
     var storedMessages = parsedMessages.doAction(storage.save).toProperty(storage.fetch());
-    var allMessages = storedMessages.map(".puoti").splitByKey().doAction(updateSpinners);
+    var puoti = storedMessages.map(".puoti").splitByKey().doAction(updateSpinners);
     var timeOfLastMessage = storedMessages.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
-    var countersWithTarget = allMessages.filter(hasTarget);
+    var countersWithTarget = puoti.filter(hasTarget);
     var targetReached = countersWithTarget.filter(reachedTarget);
 
     socket.open.onValue(playSound);
     socket.open.onValue(showConnectedMessage);
     socket.close.toProperty(true).onValue(showDisconnectMessage);
     socket.error.onValue(reconnect);
-    allMessages.delay(1000).onValue(spin);
+    puoti.delay(1000).onValue(spin);
 
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
 
