@@ -123,11 +123,11 @@ define(function (require) {
             });
         });
         describe('reconnecting to server', function () {
-            it('tries to reconnect after 50000ms', function () {
+            it('tries to reconnect after connection close in 10000ms', function () {
                 jasmine.Clock.useMock();
                 spyOn(app.connection, 'connect');
-                connectionError()
-                jasmine.Clock.tick(50000);
+                closeConnection()
+                jasmine.Clock.tick(10000);
                 expect(app.connection.connect).toHaveBeenCalled();
             });
         });

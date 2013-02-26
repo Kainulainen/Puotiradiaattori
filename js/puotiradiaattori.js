@@ -15,28 +15,27 @@ define(function(require) {
     var prettyDate = require('pretty')
     var storage = require('storage')
 
-    var html = _.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter, counter.digits)).end();});
+    $('#counters').html(_.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter, counter.digits)).end();}));
 
-    var parsedMessages = socket.message.map(toJSON);
-    var storedMessages = parsedMessages.doAction(storage.save).toProperty(storage.fetch());
+    var allMessages = socket.message.map(toJSON)
+    var storedMessages = allMessages.doAction(storage.save).toProperty(storage.fetch());
+
     var puoti = storedMessages.map(".puoti").splitByKey().doAction(updateSpinners);
     var timeOfLastMessage = storedMessages.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
     var countersWithTarget = puoti.filter(hasTarget);
     var targetReached = countersWithTarget.filter(reachedTarget);
 
+    var connect = socket.close.toProperty(true);
+    connect.onValue(showDisconnectMessage);
+    connect.delay(10000).onValue(connectToServer);
+
     socket.open.onValue(playSound);
     socket.open.onValue(showConnectedMessage);
-    socket.close.toProperty(true).onValue(showDisconnectMessage);
-    socket.error.onValue(reconnect);
-
     puoti.delay(1000).onValue(spin);
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
     countersWithTarget.onValue(showTargetValue);
     targetReached.onValue(playSound);
-
-    $("#counters").html(html);
-    socket.connect();
 
    function updateSpinners(counter) {
        return byId(counter).find('.counter').html(createSpinners(counter, updatedNumberOfSpinners(counter)));
@@ -74,7 +73,7 @@ define(function(require) {
 
     function showConnectedMessage() {$('#connection').html('CONNECTED');}
     function showDisconnectMessage() {$('#connection').html('DISCONNECTED');}
-    function reconnect() {setTimeout(socket.connect, 50000);}
+    function connectToServer() {socket.connect()}
 
     function playSound() {sound.play()}
 
