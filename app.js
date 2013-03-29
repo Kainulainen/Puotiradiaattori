@@ -6,7 +6,7 @@ require.config({
             'lib/jquery-1.9.1.min'
         ],
         'underscore': [
-            'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.0.0-rc.3/lodash.min',
+            'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.1.1/lodash.min',
             'lib/lodash.min'
         ],
         'Bacon': 'lib/Bacon.min',
