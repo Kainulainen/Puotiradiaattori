@@ -29,15 +29,15 @@ define(function(require) {
 
     var connect = socket.close.toProperty(true);
     connect.assign($("#connection"), "text", "DISCONNECTED")
-    connect.delay(10000).onValue(connectToServer);
+    connect.delay(10000).assign(socket, "connect");
 
-    socket.open.onValue(playSound);
+    socket.open.assign(sound, "play");
     socket.open.assign($("#connection"), "text", "CONNECTED")
 
     puoti.delay(1000).onValue(".spin");
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate).assign($('#timeSinceLastUpdate'), "text");
     countersWithTarget.onValue(".showTargetValue");
-    targetReached.onValue(playSound);
+    targetReached.assign(sound, "play");
 
     function createOneCounter(settingsCounter) {
         return settingsCounter.target ? $(counterTemplate(settingsCounter)).append(targetTemplate(settingsCounter)).wrap('<div></div>').parent().html() : counterTemplate(settingsCounter);
@@ -52,11 +52,6 @@ define(function(require) {
        }
        return _.merge(defaults, storage.fetch())
     }
-
-    function connectToServer() {socket.connect()}
-
-    function playSound() {sound.play()}
-
     function toJSON(message) {return JSON.parse(message.data);}
 
     return {connection: socket, sound: sound};
