@@ -25,7 +25,7 @@ define(function(require) {
     var countersWithTarget = puoti.filter(function(counter) {return counter.hasTarget() });
     var targetReached = countersWithTarget.filter(function(counter) {return counter.reachedTarget() });
 
-    $("#counters").html(_.map(settings.counters, function(counter) {return $(createOneCounter(counter))}));
+    $("#counters").html(_.map(settings.counters, createOneCounter));
     socket.connect();
 
     var connect = socket.close.toProperty(true);
