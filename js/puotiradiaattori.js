@@ -35,7 +35,7 @@ define(function(require) {
     socket.open.assign($("#connection"), "text", "CONNECTED")
 
     puoti.delay(1000).onValue(".spin");
-    everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
+    everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate).assign($('#timeSinceLastUpdate'), "text");
     countersWithTarget.onValue(".showTargetValue");
     targetReached.onValue(playSound);
 
@@ -53,7 +53,6 @@ define(function(require) {
        return _.merge(defaults, storage.fetch())
     }
 
-    function updateTimeSinceLastMessage(time) {$('#timeSinceLastUpdate').html(prettyDate(time))}
     function connectToServer() {socket.connect()}
 
     function playSound() {sound.play()}
