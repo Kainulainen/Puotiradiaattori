@@ -29,11 +29,11 @@ define(function(require) {
     socket.connect();
 
     var connect = socket.close.toProperty(true);
-    connect.onValue(showDisconnectMessage);
+    connect.assign($("#connection"), "text", "DISCONNECTED")
     connect.delay(10000).onValue(connectToServer);
 
     socket.open.onValue(playSound);
-    socket.open.onValue(showConnectedMessage);
+    socket.open.assign($("#connection"), "text", "CONNECTED")
 
     puoti.delay(1000).onValue(".spin");
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
@@ -55,9 +55,6 @@ define(function(require) {
     }
 
     function updateTimeSinceLastMessage(time) {$('#timeSinceLastUpdate').html(prettyDate(time))}
-
-    function showConnectedMessage() {$('#connection').html('CONNECTED');}
-    function showDisconnectMessage() {$('#connection').html('DISCONNECTED');}
     function connectToServer() {socket.connect()}
 
     function playSound() {sound.play()}
