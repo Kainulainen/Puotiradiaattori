@@ -1,6 +1,7 @@
 define(function(require) {
    return {init: function() {
     var settings = require('settings')
+    var counter = require('counter')
     var $ = require('jquery')
     var _ = require('underscore')
     var tpl = require('tpl')
@@ -15,16 +16,17 @@ define(function(require) {
     var prettyDate = require('pretty')
     var storage = require('storage')
 
-    $('#counters').html(_.map(settings.counters, function(counter) {return $(createOneCounter(counter)).find('.counter').html(createSpinners(counter, counter.digits)).end();}));
+    var parsedMessages = socket.message.map(toJSON);
+    var storedMessages = parsedMessages.doAction(storage.save).toProperty(initialCounterValues())
 
-    var allMessages = socket.message.map(toJSON)
-    var storedMessages = allMessages.doAction(storage.save).toProperty(storage.fetch());
-
-    var puoti = storedMessages.map(".puoti").splitByKey().doAction(updateSpinners);
+    var puoti = storedMessages.map(".puoti").splitByKey().map(counter).doAction(function(counter) {return counter.updateSpinners()});
     var timeOfLastMessage = storedMessages.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
-    var countersWithTarget = puoti.filter(hasTarget);
-    var targetReached = countersWithTarget.filter(reachedTarget);
+    var countersWithTarget = puoti.filter(function(counter) {return counter.hasTarget() });
+    var targetReached = countersWithTarget.filter(function(counter) {return counter.reachedTarget() });
+
+    $("#counters").html(_.map(settings.counters, function(counter) {return $(createOneCounter(counter))}));
+    socket.connect();
 
     var connect = socket.close.toProperty(true);
     connect.onValue(showDisconnectMessage);
@@ -32,42 +34,25 @@ define(function(require) {
 
     socket.open.onValue(playSound);
     socket.open.onValue(showConnectedMessage);
-    puoti.delay(1000).onValue(spin);
+
+    puoti.delay(1000).onValue(function(counter) {counter.spin()});
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).onValue(updateTimeSinceLastMessage);
-    countersWithTarget.onValue(showTargetValue);
+    countersWithTarget.onValue(counter.showTargetValue);
     targetReached.onValue(playSound);
-
-   function updateSpinners(counter) {
-       return byId(counter).find('.counter').html(createSpinners(counter, updatedNumberOfSpinners(counter)));
-   }
-
-   function updatedNumberOfSpinners(counter) {
-       var newCount = digitsToSpin(counter).length;
-       var defaultCount = fromSettings(counter).digits;
-       return newCount > defaultCount ? newCount : defaultCount;
-   }
-
-    function spin(counter) {
-        var spinners = byId(counter).find('.spinner');
-        var currentDigits = digitsToSpin(counter);
-        var updatedDigits = _.flatten([zeros(spinners.length - currentDigits.length), currentDigits]).reverse();
-        var updatedClasses = updatedDigits.map(function(digit) {return 'spinner roll-to-' + digit });
-        _.each(updatedClasses, function(updatedClass, index) {return spinners.eq(index).attr('class', updatedClass)})
-     }
-
-    function showTargetValue(counter) {
-       byId(counter).find('.target').addClass('show').find('.value').text(targetPercent(counter).toFixed(1) + '%').toggleClass('reached', reachedTarget(counter));
-    }
 
     function createOneCounter(settingsCounter) {
         return settingsCounter.target ? $(counterTemplate(settingsCounter)).append(targetTemplate(settingsCounter)).wrap('<div></div>').parent().html() : counterTemplate(settingsCounter);
     }
-    function createSpinners(counter, digits) {return _.range(digits).map(function(element, index) {
-        return spinnerTemplate({currentDigit: byId(counter).find('.spinner').eq(index).attr('class') || 'spinner roll-to-0'})}).join('');
+
+    function initialCounterValues() {
+       var defaults = {
+           'puoti': _.reduce(settings.counters, function (puoti, counter) {
+               puoti[counter.id] = _.range(counter.digits).map(function () {return 0}).join('')
+               return puoti
+           }, {})
+       }
+       return _.merge(defaults, storage.fetch())
     }
-    function byId(counter) {return $('#' + id(counter));}
-    function id(counter) {return _.keys(counter);}
-    function digitsToSpin(counter) {return _.values(counter).toString().split('');}
 
     function updateTimeSinceLastMessage(time) {$('#timeSinceLastUpdate').html(prettyDate(time))}
 
@@ -77,13 +62,7 @@ define(function(require) {
 
     function playSound() {sound.play()}
 
-    function reachedTarget(counter) {return targetPercent(counter) >= 100 }
-    function targetPercent(counter) {return (_.values(counter) / fromSettings(counter).target.value) * 100;}
-    function hasTarget(counter) {return typeof fromSettings(counter).target != 'undefined'}
-
-    function fromSettings(counter) {return _.find(settings.counters, function(settingsCounter) {return settingsCounter.id == id(counter)});}
     function toJSON(message) {return JSON.parse(message.data);}
-    function zeros(count) {return _.range(count).map(function() {return '0'})}
 
     return {connection: socket, sound: sound};
    }}
