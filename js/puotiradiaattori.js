@@ -8,7 +8,6 @@ define(function(require) {
     var Bacon = require('Bacon')
     Bacon.splitByKey = require('Bacon.splitByKey')
     Bacon.skipDuplicates = require('Bacon.skipDuplicates')
-    var spinnerTemplate = require('tpl!spinner.html');
     var counterTemplate = require('tpl!counter.html');
     var targetTemplate = require('tpl!target.html');
     var sound = require('sound')(settings.sound)
