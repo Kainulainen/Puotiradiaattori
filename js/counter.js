@@ -1,12 +1,18 @@
 define(function(require) {
     var _ = require('underscore');
     var settings = require('settings');
+    var counterTemplate = require('tpl!counter.html');
     var spinnerTemplate = require('tpl!spinner.html');
+    var targetTemplate = require('tpl!target.html');
 
     return function(message) {
         var id = _.keys(message)
         var value = _.values(message)
         var setup = _.find(settings.counters, function(settingsCounter) {return settingsCounter.id == id})
+
+        function create() {
+            $('#counters').append(setup.target ? $(counterTemplate(setup)).append(targetTemplate(setup)).wrap('<div></div>').parent().html() : counterTemplate(setup));
+        }
 
         function updateSpinners() {
             return byId().find('.counter').html(createSpinners(updatedNumberOfSpinners()));
@@ -39,12 +45,15 @@ define(function(require) {
         function byId() {return $('#' + id);}
         function digitsToSpin() {return value.toString().split('');}
         function zeros(count) {return _.range(count).map(function() {return '0'})}
+        function newCounter() {return byId().length == 0;}
 
         return {
             updateSpinners: updateSpinners,
             spin: spin,
             showTargetValue: showTargetValue,
-            hasTarget: hasTarget
+            hasTarget: hasTarget,
+            newCounter: newCounter,
+            create: create
         }
     }
 })
