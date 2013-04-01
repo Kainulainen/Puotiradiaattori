@@ -25,11 +25,10 @@ define(function(require) {
     var targetReached = countersWithTarget.filter(".reachedTarget");
 
     $("#counters").html(_.map(settings.counters, createOneCounter));
-    socket.connect();
 
     var connect = socket.close.toProperty(true);
     connect.assign($("#connection"), "text", "DISCONNECTED")
-    connect.delay(10000).assign(socket, "connect");
+    connect.delay(1000).assign(socket, "connect");
 
     socket.open.assign(sound, "play");
     socket.open.assign($("#connection"), "text", "CONNECTED")
