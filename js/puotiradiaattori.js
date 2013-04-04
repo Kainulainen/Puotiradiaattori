@@ -7,7 +7,6 @@ define(function(require) {
     var tpl = require('tpl')
     var Bacon = require('Bacon')
     Bacon.splitByKey = require('Bacon.splitByKey')
-    Bacon.skipDuplicates = require('Bacon.skipDuplicates')
     var sound = require('sound')(settings.sound)
     var socket = require('socket')(settings.serverUrl)
     var prettyDate = require('pretty')

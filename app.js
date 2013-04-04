@@ -11,7 +11,6 @@ require.config({
         ],
         'Bacon': 'lib/Bacon.min',
         'Bacon.splitByKey': 'lib/Bacon.splitByKey',
-        'Bacon.skipDuplicates': 'lib/Bacon.skipDuplicates',
         'tpl': 'lib/tpl-custom',
         'socket': 'lib/socket',
         'sound': 'lib/sound',
@@ -19,8 +18,7 @@ require.config({
         'storage': 'lib/storage'
     },
     shim: {
-        'Bacon.splitByKey': ['Bacon'],
-        'Bacon.skipDuplicates': ['Bacon']
+        'Bacon.splitByKey': ['Bacon']
     }
 
 });
