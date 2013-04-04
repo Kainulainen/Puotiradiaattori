@@ -1,5 +1,5 @@
 define(function(require) {
-   return {init: function() {
+   return function() {
     var settings = require('settings')
     var counter = require('counter')
     var $ = require('jquery')
@@ -15,7 +15,7 @@ define(function(require) {
     var storedMessages = socket.message.map(toJSON).doAction(storage.save).toProperty(initialCounterValues())
     var puoti = storedMessages.map(".puoti").splitByKey().map(counter)
     var newCounters = puoti.filter('.newCounter').doAction(".create")
-    var countersToUpdate = newCounters.merge(puoti).doAction(".updateSpinners");  // todo fix merge & duplicates
+    var countersToUpdate = newCounters.merge(puoti).doAction(".updateSpinners");
 
     var timeOfLastMessage = storedMessages.map(".time").toProperty();
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
@@ -46,5 +46,5 @@ define(function(require) {
     function toJSON(message) {return JSON.parse(message.data);}
 
     return {connection: socket, sound: sound};
-   }}
+   }
 })

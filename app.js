@@ -23,7 +23,7 @@ require.config({
 
 });
 require(['puotiradiaattori'], function(puotiradiaattori) {
-    puotiradiaattori.init();
+    puotiradiaattori();
 
     var isTestEnv = document.location.href.match('runTests') != null
     if (isTestEnv)

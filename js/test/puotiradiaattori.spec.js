@@ -1,6 +1,6 @@
 define(function (require) {
     var puotiradiaattori = require('puotiradiaattori')
-    var app = puotiradiaattori.init();
+    var app = puotiradiaattori();
     var settings = require('settings');
     var storage = require('storage');
     var today = settings.counters[0];
@@ -9,7 +9,7 @@ define(function (require) {
     var _ = require('underscore');
     describe('Puotiradiaattori', function () {
         beforeEach(function () {
-            puotiradiaattori.init();
+            puotiradiaattori();
             spinCounters({"today": 345, 'week': 456});
         });
         describe('creating counters', function () {
@@ -74,7 +74,7 @@ define(function (require) {
         describe('target', function () {
             it('is optional', function() {
                 runWithoutSetting(today, 'target', function() {
-                    puotiradiaattori.init();
+                    puotiradiaattori();
                     spinCounters({"today": 1});
                     expect(counter(today.id).find('.target').length).toEqual(0);
                 })
@@ -143,7 +143,7 @@ define(function (require) {
     });
 
     describe('saving spinner data to localstorage', function() {
-        beforeEach(puotiradiaattori.init);
+        beforeEach(puotiradiaattori);
 
         it('returns nothing on first go', function() {
             storage.clear();
