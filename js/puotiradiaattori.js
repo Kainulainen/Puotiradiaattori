@@ -35,14 +35,14 @@ define(function(require) {
     targetReached.assign(sound, "play");
 
     function initialCounterValues() {
-       var defaults = {
-           'puoti': _.reduce(settings.counters, function (puoti, counter) {
-               puoti[counter.id] = _.range(counter.digits).map(function () {return 0}).join('')
-               return puoti
-           }, {})
-       }
-       return _.merge(defaults, storage.fetch())
+       var allToZero = {'puoti': _.reduce(settings.counters, setZeroAsStartingValue, {})};
+       return _.merge(allToZero, storage.fetch())
     }
+    function setZeroAsStartingValue(puoti, counter) {
+       puoti[counter.id] = 0
+       return puoti
+    }
+
     function toJSON(message) {return JSON.parse(message.data);}
 
     return {connection: socket, sound: sound};
