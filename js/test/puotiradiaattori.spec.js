@@ -5,6 +5,7 @@ define(function (require) {
     var storage = require('storage');
     var today = settings.counters[0];
     var week = settings.counters[1];
+    var month = settings.counters[2];
     var $ = require('jquery');
     var _ = require('underscore');
     describe('Puotiradiaattori', function () {
@@ -74,12 +75,8 @@ define(function (require) {
         });
         describe('target', function () {
             it('is optional', function() {
-                runWithoutSetting(today, 'target', function() {
-                    puotiradiaattori();
-                    spinCounters({"today": 1});
-                    expect(counter(today.id).find('.target').length).toEqual(0);
-                })
-
+                spinCounters({"month": 99999});
+                expect(counter(month.id).find('.target').length).toEqual(0);
             })
         });
         describe('target value', function () {
@@ -205,13 +202,6 @@ define(function (require) {
     function waitForCountersToSpin(f) {
         waits(1000)
         runs(f)
-    }
-
-    function runWithoutSetting(counter, setting, func) {
-        var savedSetting = counter[setting];
-        delete counter[setting];
-        func();
-        counter[setting] = savedSetting;
     }
 
     function counter(counterId) {return $('#' + counterId);}
