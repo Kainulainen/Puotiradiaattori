@@ -1,4 +1,5 @@
 define(function(require) {
+    var $ = require('jquery');
     var _ = require('underscore');
     var settings = require('settings');
     var counterTemplate = require('tpl!counter.html');
