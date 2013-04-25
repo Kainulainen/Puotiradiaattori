@@ -9,6 +9,7 @@ define(function (require) {
     var _ = require('underscore');
     describe('Puotiradiaattori', function () {
         beforeEach(function () {
+            localStorage.clear();
             puotiradiaattori();
             spinCounters({"today": 345, 'week': 456});
         });
