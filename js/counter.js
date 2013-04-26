@@ -40,7 +40,6 @@ define(function(require) {
         }
         function targetPercent() {return (value / setup.target.value) * 100;}
         function reachedTarget() {return targetPercent() >= 100 }
-
         function hasTarget() {return typeof setup.target != 'undefined'}
 
         function byId() {return $('#' + id);}
@@ -53,6 +52,7 @@ define(function(require) {
             spin: spin,
             showTargetValue: showTargetValue,
             hasTarget: hasTarget,
+            reachedTarget: reachedTarget,
             newCounter: newCounter,
             create: create
         }
