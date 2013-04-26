@@ -13,29 +13,30 @@ define(function(require) {
     var storage = require('storage')
 
     var storedMessages = socket.message.map(toJSON).doAction(storage.save).toProperty(initialCounterValues())
+
     var puoti = storedMessages.map(".puoti").splitByKey().map(counter)
     var newCounters = puoti.filter('.newCounter').doAction(".create")
-    var countersToUpdate = newCounters.merge(puoti).doAction(".updateSpinners");
+    var countersToUpdate = newCounters.merge(puoti).doAction(".updateSpinners")
 
-    var timeOfLastMessage = storedMessages.map(".time").toProperty();
+    var timeOfLastMessage = storedMessages.map(".time").toProperty()
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
-    var countersWithTarget = puoti.filter(".hasTarget");
-    var targetReached = countersWithTarget.filter(".reachedTarget");
+    var countersWithTarget = puoti.filter(".hasTarget")
+    var targetReached = countersWithTarget.filter(".reachedTarget")
 
-    var connect = socket.close.toProperty(true);
+    var connect = socket.close.toProperty(true)
     connect.assign($("#connection"), "text", "DISCONNECTED")
-    connect.delay(1000).assign(socket, "connect");
+    connect.delay(1000).assign(socket, "connect")
 
-    socket.open.assign(sound, "play");
+    socket.open.assign(sound, "play")
     socket.open.assign($("#connection"), "text", "CONNECTED")
 
-    countersToUpdate.delay(1000).onValue(".spin");
-    everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate).assign($('#timeSinceLastUpdate'), "text");
-    countersWithTarget.onValue(".showTargetValue");
-    targetReached.assign(sound, "play");
+    countersToUpdate.delay(1000).onValue(".spin")
+    everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate).assign($('#timeSinceLastUpdate'), "text")
+    countersWithTarget.onValue(".showTargetValue")
+    targetReached.assign(sound, "play")
 
     function initialCounterValues() {
-       var allToZero = {'puoti': _.reduce(settings.counters, setZeroAsStartingValue, {})};
+       var allToZero = {'puoti': _.reduce(settings.counters, setZeroAsStartingValue, {})}
        return _.merge(allToZero, storage.fetch())
     }
     function setZeroAsStartingValue(puoti, counter) {
@@ -43,8 +44,8 @@ define(function(require) {
        return puoti
     }
 
-    function toJSON(message) {return JSON.parse(message.data);}
+    function toJSON(message) {return JSON.parse(message.data)}
 
-    return {connection: socket, sound: sound};
+    return {connection: socket, sound: sound}
    }
 })
