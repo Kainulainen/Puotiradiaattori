@@ -5,7 +5,7 @@ require.config({
             'http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
             'lib/jquery-2.0.0.min'
         ],
-        'underscore': [
+        '_': [
             'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.2.0/lodash.min',
             'lib/lodash.min'
         ],

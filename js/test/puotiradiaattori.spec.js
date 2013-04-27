@@ -7,7 +7,7 @@ define(function (require) {
     var week = settings.counters[1];
     var month = settings.counters[2];
     var $ = require('jquery');
-    var _ = require('underscore');
+    var _ = require('_');
     describe('Puotiradiaattori', function () {
         beforeEach(function () {
             localStorage.clear();

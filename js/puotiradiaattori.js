@@ -3,7 +3,7 @@ define(function(require) {
     var settings = require('settings')
     var counter = require('counter')
     var $ = require('jquery')
-    var _ = require('underscore')
+    var _ = require('_')
     var tpl = require('tpl')
     var Bacon = require('Bacon')
     Bacon.splitByKey = require('Bacon.splitByKey')
