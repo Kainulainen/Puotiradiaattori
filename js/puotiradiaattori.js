@@ -5,7 +5,7 @@ define(function(require) {
     var $ = require('jquery')
     var _ = require('_')
     var Bacon = require('Bacon')
-    Bacon.splitByKey = require('Bacon.splitByKey')
+    require('Bacon.splitByKey')
     var sound = require('sound')(settings.sound)
     var socket = require('socket')(settings.serverUrl)
     var prettyDate = require('pretty')
