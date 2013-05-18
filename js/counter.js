@@ -2,6 +2,7 @@ define(function(require) {
     var $ = require('jquery');
     var _ = require('_');
     var settings = require('settings');
+    var tpl = require('tpl')
     var counterTemplate = require('tpl!counter.html');
     var spinnerTemplate = require('tpl!spinner.html');
     var targetTemplate = require('tpl!target.html');

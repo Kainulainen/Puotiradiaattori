@@ -4,7 +4,6 @@ define(function(require) {
     var counter = require('counter')
     var $ = require('jquery')
     var _ = require('_')
-    var tpl = require('tpl')
     var Bacon = require('Bacon')
     Bacon.splitByKey = require('Bacon.splitByKey')
     var sound = require('sound')(settings.sound)
