@@ -17,7 +17,7 @@ define(function(require) {
     var newCounters = puoti.filter('.newCounter').doAction(".create")
     var countersToUpdate = newCounters.merge(puoti).doAction(".updateSpinners")
 
-    var timeOfLastMessage = storedMessages.map(".time").toProperty()
+    var timeOfLastMessage = storedMessages.map(".time")
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
     var countersWithTarget = puoti.filter(".hasTarget")
     var targetReached = countersWithTarget.filter(".reachedTarget")
