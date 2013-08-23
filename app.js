@@ -2,11 +2,11 @@ require.config({
     baseUrl: 'js',
     paths: {
         'jquery': [
-            'http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
-            'lib/jquery-2.0.0.min'
+            'http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min',
+            'lib/jquery-2.0.3.min'
         ],
         '_': [
-            'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.2.0/lodash.min',
+            'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.3.1/lodash.min',
             'lib/lodash.min'
         ],
         'Bacon': 'lib/Bacon.min',
