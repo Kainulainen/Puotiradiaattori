@@ -12,7 +12,7 @@ define(function(require) {
     var storage = require('storage')
 
     var messages = socket.message.map(toJSON).toProperty(initialCounterValues())
-    var puoti = messages.map(".puoti").splitByKey().map(counter)
+    var puoti = messages.map(".puoti").splitByKey().map(counter).delay(1)
     var newCounters = puoti.filter('.newCounter')
     var timeOfLastMessage = messages.map(".time")
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})

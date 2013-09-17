@@ -3,7 +3,7 @@ Bacon.Observable.prototype.splitByKey = function() {
         return _.reduce(object, function(stream, value, key) {
             var newObj = {};
             newObj[key] = value;
-            return stream.concat(Bacon.once(newObj).delay(1))
+            return stream.concat(Bacon.once(newObj))
         }, Bacon.never())
     })
 }
