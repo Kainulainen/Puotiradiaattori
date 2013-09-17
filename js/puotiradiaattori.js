@@ -11,7 +11,7 @@ define(function(require) {
     var prettyDate = require('pretty')
     var storage = require('storage')
 
-    var messages = socket.message.map(toJSON).toProperty(initialCounterValues())
+    var messages = socket.message.map('.data').map(JSON.parse).toProperty(initialCounterValues())
     var puoti = messages.map('.puoti').splitByKey().map(counter).delay(1)
     var newCounters = puoti.filter('.newCounter')
     var timeOfLastMessage = messages.map('.time')
@@ -43,8 +43,6 @@ define(function(require) {
        puoti[counter.id] = 0
        return puoti
     }
-
-    function toJSON(message) {return JSON.parse(message.data)}
 
     return {connection: socket, sound: sound}
    }
