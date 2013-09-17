@@ -165,6 +165,16 @@ define(function (require) {
         })
     })
 
+    describe('counter initial state', function () {
+        it('shows 10 zeros when no saved value exists', function () {
+            storage.clear();
+            puotiradiaattori();
+            waitForCountersToSpin(function() {
+                expect(counter(today.id).counterDigits()).toBe('0000000000');
+            })
+        });
+    });
+
     function spinCounters(json, time) {toMessageBus(fakeJSON(json, time));}
     function fakeJSON(obj, time) {return {'type':'message','data':JSON.stringify({'puoti':obj,'time': formattedUTCDate(time || new Date())})};} //2013-01-24T09:49:18Z | ISO 8601
 
