@@ -14,9 +14,7 @@ define(function(require) {
     var storedMessages = socket.message.map(toJSON).doAction(storage.save).toProperty(initialCounterValues())
 
     var puoti = storedMessages.map(".puoti").splitByKey().map(counter)
-    var newCounters = puoti.filter('.newCounter').doAction(".create")
-    var countersToUpdate = newCounters.merge(puoti).doAction(".updateSpinners")
-
+    var newCounters = puoti.filter('.newCounter')
     var timeOfLastMessage = storedMessages.map(".time")
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
     var countersWithTarget = puoti.filter(".hasTarget")
@@ -29,7 +27,9 @@ define(function(require) {
     socket.open.assign(sound, "play")
     socket.open.assign($("#connection"), "text", "CONNECTED")
 
-    countersToUpdate.delay(1000).onValue(".spin")
+    newCounters.onValue(".create")
+    puoti.onValue(".updateSpinners")
+    puoti.onValue(".spin")
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate).assign($('#timeSinceLastUpdate'), "text")
     countersWithTarget.onValue(".showTargetValue")
     targetReached.assign(sound, "play")
