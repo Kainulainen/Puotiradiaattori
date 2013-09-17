@@ -11,10 +11,10 @@ define(function(require) {
     var prettyDate = require('pretty')
     var storage = require('storage')
 
-    var storedMessages = socket.message.map(toJSON).toProperty(initialCounterValues())
-    var puoti = storedMessages.map(".puoti").splitByKey().map(counter)
+    var messages = socket.message.map(toJSON).toProperty(initialCounterValues())
+    var puoti = messages.map(".puoti").splitByKey().map(counter)
     var newCounters = puoti.filter('.newCounter')
-    var timeOfLastMessage = storedMessages.map(".time")
+    var timeOfLastMessage = messages.map(".time")
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
     var countersWithTarget = puoti.filter(".hasTarget")
     var targetReached = countersWithTarget.filter(".reachedTarget")
@@ -26,7 +26,7 @@ define(function(require) {
     socket.open.assign(sound, "play")
     socket.open.assign($("#connection"), "text", "CONNECTED")
 
-    storedMessages.onValue(storage.save)
+    messages.onValue(storage.save)
     newCounters.onValue(".create")
     puoti.onValue(".updateSpinners")
     puoti.delay(1).onValue(".spin")
