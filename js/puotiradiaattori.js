@@ -15,8 +15,8 @@ define(function(require) {
     var puoti = messages.map(".puoti").splitByKey().map(counter).delay(1)
     var newCounters = puoti.filter('.newCounter')
     var timeOfLastMessage = messages.map(".time")
-    var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
-    var formattedLastUpdateMessage = everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate)
+    var lastMessageTimeEveryMinute = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
+    var formattedLastUpdateMessage = lastMessageTimeEveryMinute.merge(timeOfLastMessage).map(prettyDate)
     var countersWithTarget = puoti.filter(".hasTarget")
     var targetReached = countersWithTarget.filter(".reachedTarget")
 
