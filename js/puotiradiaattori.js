@@ -12,28 +12,28 @@ define(function(require) {
     var storage = require('storage')
 
     var messages = socket.message.map(toJSON).toProperty(initialCounterValues())
-    var puoti = messages.map(".puoti").splitByKey().map(counter).delay(1)
+    var puoti = messages.map('.puoti').splitByKey().map(counter).delay(1)
     var newCounters = puoti.filter('.newCounter')
-    var timeOfLastMessage = messages.map(".time")
+    var timeOfLastMessage = messages.map('.time')
     var lastMessageTimeEveryMinute = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
     var formattedLastUpdateMessage = lastMessageTimeEveryMinute.merge(timeOfLastMessage).map(prettyDate)
-    var countersWithTarget = puoti.filter(".hasTarget")
-    var targetReached = countersWithTarget.filter(".reachedTarget")
+    var countersWithTarget = puoti.filter('.hasTarget')
+    var targetReached = countersWithTarget.filter('.reachedTarget')
 
     var connect = socket.close.toProperty(true)
-    connect.assign($("#connection"), "text", "DISCONNECTED")
-    connect.delay(1000).assign(socket, "connect")
+    connect.assign($('#connection'), 'text', 'DISCONNECTED')
+    connect.delay(1000).assign(socket, 'connect')
 
-    socket.open.assign(sound, "play")
-    socket.open.assign($("#connection"), "text", "CONNECTED")
+    socket.open.assign(sound, 'play')
+    socket.open.assign($('#connection'), 'text', 'CONNECTED')
 
     messages.onValue(storage.save)
-    newCounters.onValue(".create")
-    puoti.onValue(".updateSpinners")
-    puoti.delay(1).onValue(".spin")
-    formattedLastUpdateMessage.assign($('#timeSinceLastUpdate'), "text")
-    countersWithTarget.onValue(".showTargetValue")
-    targetReached.assign(sound, "play")
+    newCounters.onValue('.create')
+    puoti.onValue('.updateSpinners')
+    puoti.delay(1).onValue('.spin')
+    formattedLastUpdateMessage.assign($('#timeSinceLastUpdate'), 'text')
+    countersWithTarget.onValue('.showTargetValue')
+    targetReached.assign(sound, 'play')
 
     function initialCounterValues() {
        var allToZero = {'puoti': _.reduce(settings.counters, setZeroAsStartingValue, {})}
