@@ -29,7 +29,7 @@ define(function(require) {
     storedMessages.onValue(storage.save)
     newCounters.onValue(".create")
     puoti.onValue(".updateSpinners")
-    puoti.onValue(".spin")
+    puoti.delay(1).onValue(".spin")
     everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate).assign($('#timeSinceLastUpdate'), "text")
     countersWithTarget.onValue(".showTargetValue")
     targetReached.assign(sound, "play")
