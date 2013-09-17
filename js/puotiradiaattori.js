@@ -11,8 +11,7 @@ define(function(require) {
     var prettyDate = require('pretty')
     var storage = require('storage')
 
-    var storedMessages = socket.message.map(toJSON).doAction(storage.save).toProperty(initialCounterValues())
-
+    var storedMessages = socket.message.map(toJSON).toProperty(initialCounterValues())
     var puoti = storedMessages.map(".puoti").splitByKey().map(counter)
     var newCounters = puoti.filter('.newCounter')
     var timeOfLastMessage = storedMessages.map(".time")
@@ -27,6 +26,7 @@ define(function(require) {
     socket.open.assign(sound, "play")
     socket.open.assign($("#connection"), "text", "CONNECTED")
 
+    storedMessages.onValue(storage.save)
     newCounters.onValue(".create")
     puoti.onValue(".updateSpinners")
     puoti.onValue(".spin")
