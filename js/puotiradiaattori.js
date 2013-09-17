@@ -16,6 +16,7 @@ define(function(require) {
     var newCounters = puoti.filter('.newCounter')
     var timeOfLastMessage = messages.map(".time")
     var everyMinuteSinceLastMessage = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
+    var formattedLastUpdateMessage = everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate)
     var countersWithTarget = puoti.filter(".hasTarget")
     var targetReached = countersWithTarget.filter(".reachedTarget")
 
@@ -30,7 +31,7 @@ define(function(require) {
     newCounters.onValue(".create")
     puoti.onValue(".updateSpinners")
     puoti.delay(1).onValue(".spin")
-    everyMinuteSinceLastMessage.merge(timeOfLastMessage).map(prettyDate).assign($('#timeSinceLastUpdate'), "text")
+    formattedLastUpdateMessage.assign($('#timeSinceLastUpdate'), "text")
     countersWithTarget.onValue(".showTargetValue")
     targetReached.assign(sound, "play")
 
