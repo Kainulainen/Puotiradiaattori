@@ -84,25 +84,35 @@ define(function (require) {
                 beforeEach(function() {spinCounters({"today": 10000});});
 
                 it('shows values over target', function() {
-                    expect(counter(today.id).find('.target .value')).toHaveText('1000.0%');
+                    waitForCountersToSpin(function() {
+                        expect(counter(today.id).find('.target .value')).toHaveText('1000.0%');
+                    });
                 });
                 it('changes css class', function() {
-                    expect(counter(today.id).find('.target .value')).toHaveClass('reached');
+                    waitForCountersToSpin(function() {
+                        expect(counter(today.id).find('.target .value')).toHaveClass('reached');
+                    });
                 });
                 it('plays sound', function() {
                     spyOn(app.sound, 'play');
                     spinCounters({"today": 134234980980});
-                    expect(app.sound.play).toHaveBeenCalled();
+                    waitForCountersToSpin(function() {
+                        expect(app.sound.play).toHaveBeenCalled();
+                    });
                 });
             });
             describe('is less than counter value', function() {
                 beforeEach(function() {spinCounters({"today": 1});});
 
                 it('shows values less than target', function() {
-                    expect(counter(today.id).find('.target .value')).toHaveText('0.1%');
+                    waitForCountersToSpin(function() {
+                        expect(counter(today.id).find('.target .value')).toHaveText('0.1%');
+                    });
                 });
                 it('changes css class', function() {
-                    expect(counter(today.id).find('.target .value')).not.toHaveClass('reached');
+                    waitForCountersToSpin(function() {
+                        expect(counter(today.id).find('.target .value')).not.toHaveClass('reached');
+                    });
                 });
             })
         });
