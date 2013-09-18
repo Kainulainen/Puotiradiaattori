@@ -15,8 +15,8 @@ define(function(require) {
     var puoti = messages.map('.puoti').splitByKey().map(counter).delay(1)
     var newCounters = puoti.filter('.newCounter')
     var timeOfLastMessage = messages.map('.time')
-    var lastMessageTimeEveryMinute = timeOfLastMessage.flatMapLatest(function(time) {return Bacon.interval(60000, time)})
-    var formattedLastUpdateMessage = lastMessageTimeEveryMinute.merge(timeOfLastMessage).map(prettyDate)
+    var timeOfLastMessageRepeatedlyEveryMinute = timeOfLastMessage.flatMapLatest(repeatedlyEveryMinute)
+    var formattedTimeOfLastMessage = timeOfLastMessageRepeatedlyEveryMinute.merge(timeOfLastMessage).map(prettyDate)
     var countersWithTarget = puoti.filter('.hasTarget')
     var targetReached = countersWithTarget.filter('.reachedTarget')
 
@@ -31,7 +31,7 @@ define(function(require) {
     newCounters.onValue('.create')
     puoti.onValue('.updateSpinners')
     puoti.delay(1).onValue('.spin')
-    formattedLastUpdateMessage.assign($('#timeSinceLastUpdate'), 'text')
+    formattedTimeOfLastMessage.assign($('#timeSinceLastUpdate'), 'text')
     countersWithTarget.onValue('.showTargetValue')
     targetReached.assign(sound, 'play')
 
@@ -43,6 +43,7 @@ define(function(require) {
        puoti[counter.id] = 0
        return puoti
     }
+    function repeatedlyEveryMinute(message) {return Bacon.interval(60000, message)}
 
     return {connection: socket, sound: sound}
    }
