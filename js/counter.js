@@ -41,7 +41,7 @@ define(function(require) {
         }
         function targetPercent() {return (value / setup.target.value) * 100;}
         function reachedTarget() {return targetPercent() >= 100 }
-        function hasTarget() {return typeof setup.target != 'undefined'}
+        function hasTarget() {return !_.isUndefined(setup.target)}
 
         function counter() {return $('#' + id);}
         function digitsToSpin() {return value.toString().split('');}
