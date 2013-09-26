@@ -46,7 +46,7 @@ define(function(require) {
         function byId() {return $('#' + id);}
         function digitsToSpin() {return value.toString().split('');}
         function zeros(count) {return _.range(count).map(function() {return '0'})}
-        function newCounter() {return byId().length == 0;}
+        function newCounter() {return _.isEmpty(byId());}
 
         return {
             updateSpinners: updateSpinners,
