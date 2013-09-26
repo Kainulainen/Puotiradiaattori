@@ -17,10 +17,10 @@ define(function(require) {
         }
 
         function updateSpinners() {
-            return byId().find('.counter').html(createSpinners(updatedNumberOfSpinners()));
+            return counter().find('.counter').html(createSpinners(updatedNumberOfSpinners()));
         }
         function createSpinners(digits) {return _.range(digits).map(function(element, index) {
-            return spinnerTemplate({currentDigit: byId().find('.spinner').eq(index).attr('class') || 'spinner roll-to-0'})}).join('');
+            return spinnerTemplate({currentDigit: counter().find('.spinner').eq(index).attr('class') || 'spinner roll-to-0'})}).join('');
         }
         function updatedNumberOfSpinners() {
             var newCount = digitsToSpin().length;
@@ -29,7 +29,7 @@ define(function(require) {
         }
 
         function spin() {
-            var spinners = byId().find('.spinner');
+            var spinners = counter().find('.spinner');
             var currentDigits = digitsToSpin();
             var updatedDigits = _.flatten([zeros(spinners.length - currentDigits.length), currentDigits]).reverse();
             var updatedClasses = updatedDigits.map(function(digit) {return 'spinner roll-to-' + digit });
@@ -37,16 +37,16 @@ define(function(require) {
         }
 
         function showTargetValue() {
-            byId().find('.target').addClass('show').find('.value').text(targetPercent().toFixed(1) + '%').toggleClass('reached', reachedTarget());
+            counter().find('.target').addClass('show').find('.value').text(targetPercent().toFixed(1) + '%').toggleClass('reached', reachedTarget());
         }
         function targetPercent() {return (value / setup.target.value) * 100;}
         function reachedTarget() {return targetPercent() >= 100 }
         function hasTarget() {return typeof setup.target != 'undefined'}
 
-        function byId() {return $('#' + id);}
+        function counter() {return $('#' + id);}
         function digitsToSpin() {return value.toString().split('');}
         function zeros(count) {return _.range(count).map(function() {return '0'})}
-        function newCounter() {return _.isEmpty(byId());}
+        function newCounter() {return _.isEmpty(counter());}
 
         return {
             updateSpinners: updateSpinners,
