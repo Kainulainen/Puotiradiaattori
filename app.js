@@ -6,7 +6,7 @@ require.config({
             'lib/jquery-2.0.3.min'
         ],
         '_': [
-            'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.0.0/lodash.min',
+            'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.1.0/lodash.min',
             'lib/lodash.min'
         ],
         'Bacon': 'lib/Bacon.min',
