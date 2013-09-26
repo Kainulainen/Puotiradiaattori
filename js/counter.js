@@ -8,9 +8,9 @@ define(function(require) {
     var targetTemplate = require('tpl!target.html')
 
     return function(message) {
-        var id = _.keys(message)
-        var value = _.values(message)
-        var setup = _.find(settings.counters, function(settingsCounter) {return settingsCounter.id == id})
+        var id = _.keys(message)[0]
+        var value = _.values(message)[0]
+        var setup = _.find(settings.counters, {'id':id})
 
         function create() {
             $('#counters').append(setup.target ? $(counterTemplate(setup)).append(targetTemplate(setup)).wrap('<div></div>').parent().html() : counterTemplate(setup))
