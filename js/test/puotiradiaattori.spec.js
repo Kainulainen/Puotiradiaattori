@@ -123,16 +123,19 @@ define(function (require) {
         });
         describe('server connection indicating', function () {
             it('shows initial state to be disconnected', function () {
-                assertConnectionIndication('DISCONNECTED');
+                assertConnectionIndicationText('DISCONNECTED');
+                assertConnectionIndicationClass('disconnected');
             });
             it('indicates when server is connected', function () {
                 openConnection()
-                assertConnectionIndication('CONNECTED');
+                assertConnectionIndicationText('CONNECTED');
+                assertConnectionIndicationClass('');
             });
             it('indicates when server is disconnected', function () {
                 openConnection()
                 closeConnection()
-                assertConnectionIndication('DISCONNECTED');
+                assertConnectionIndicationText('DISCONNECTED');
+                assertConnectionIndicationClass('disconnected');
             });
         });
         describe('reconnecting to server', function () {
@@ -199,9 +202,13 @@ define(function (require) {
 
     function toMessageBus(msg) {app.connection.bus.push(msg)}
 
-    function assertConnectionIndication(text) {
+    function assertConnectionIndicationText(text) {
         expect($('#connection').html()).toBe(text);
     }
+    function assertConnectionIndicationClass(className) {
+        expect($('#connection').attr('class')).toBe(className);
+    }
+
     function assertLastUpdateIs(expected) {expect($('#timeSinceLastUpdate').text()).toBe(expected)}
 
     function formattedUTCDate(date) {

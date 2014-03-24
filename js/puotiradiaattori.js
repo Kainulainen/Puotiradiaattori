@@ -21,11 +21,11 @@ define(function(require) {
     var targetReached = countersWithTarget.filter('.reachedTarget')
 
     var connect = socket.close.toProperty(true)
-    connect.assign($('#connection'), 'text', 'DISCONNECTED')
+    connect.onValue(disconnectIndication)
     connect.delay(1000).assign(socket, 'connect')
 
     socket.open.assign(sound, 'play')
-    socket.open.assign($('#connection'), 'text', 'CONNECTED')
+    socket.open.onValue(connectedIndication)
 
     messages.onValue(storage.save)
     newCounters.onValue('.create')
@@ -45,6 +45,10 @@ define(function(require) {
     }
     function repeatedlyEveryMinute(message) {return Bacon.interval(60000, message)}
 
+    function disconnectIndication() { $('#connection').text('DISCONNECTED').addClass('disconnected') }
+    function connectedIndication() { $('#connection').text('CONNECTED').removeClass('disconnected') }
+
     return {connection: socket, sound: sound}
    }
+
 })

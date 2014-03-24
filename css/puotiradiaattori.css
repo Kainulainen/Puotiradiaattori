@@ -14,6 +14,8 @@ h1 { margin: 0 auto; font-size: 3rem; font-weight: normal; color: #fff; text-sha
 
 #week, #month, #year, #total { -webkit-transform: scale(0.7, 0.7); -moz-transform: scale(0.7, 0.7); -ms-transform: scale(0.7, 0.7); -o-transform: scale(0.7, 0.7); transform: scale(0.7, 0.7); margin-top: -3rem; }
 
+.disconnected { color: #f00; }
+
 .unit { border: 0; display: inline-block; color: #fff; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.4); font-size: 4rem; }
 
 .target { filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); opacity: 0; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; width: 40%; background: #fff; display: inline-block; font-size: 1.5em; padding: 0.5rem 1rem; color: #000000; }

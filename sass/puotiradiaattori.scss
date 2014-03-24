@@ -36,6 +36,8 @@ h1 {margin:0 auto; font:{size: 3rem; weight: normal}; color: #fff; @include text
 }
 #week, #month, #year, #total {@include transform(scale(0.7,0.7)); margin-top: -3rem;}
 
+.disconnected {color: #f00;}
+
 .unit {border:0; display: inline-block; color: #fff; @include text-shadow(0 1px 0 rgba(255, 255, 255, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.4)); font-size: 4rem;}
 .target {@include opacity(0); @include border-radius(5px); width: 40%; background: #fff; display: inline-block; font-size: 1.5em; padding: 0.5rem 1rem; color: #000000;
   &.show {@include opacity(1); @include single-transition(opacity, 2s, ease-out);}
