@@ -1,4 +1,8 @@
 define(function (require) {
+    require('jasmine');
+    require('jasmine.html');
+    require('jasmine.jquery');
+
     var puotiradiaattori = require('puotiradiaattori')
     var app = puotiradiaattori();
     var settings = require('settings');
@@ -8,6 +12,7 @@ define(function (require) {
     var month = settings.counters[2];
     var $ = require('jquery');
     var _ = require('_');
+
     describe('Puotiradiaattori', function () {
         beforeEach(function () {
             localStorage.clear();
@@ -233,7 +238,7 @@ define(function (require) {
     $.fn.counterDigits = function () {
         return $.map($(this).find('.spinner'),function (element) {
             return $(element).attr('class').split('roll-to-')[1];
-        }).reverse().join('');
+        }).join('');
     }
 
 })

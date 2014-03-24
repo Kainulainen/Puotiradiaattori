@@ -33,7 +33,7 @@ define(function(require) {
         function spin() {
             var spinners = counter().find('.spinner')
             var currentDigits = digitsToSpin()
-            var updatedDigits = _.flatten([zeros(spinners.length - currentDigits.length), currentDigits]).reverse()
+            var updatedDigits = _.flatten([zeros(spinners.length - currentDigits.length), currentDigits])
             var updatedClasses = updatedDigits.map(function(digit) {return 'spinner roll-to-' + digit })
             _.each(updatedClasses, function(updatedClass, index) {return spinners.eq(index).attr('class', updatedClass)})
         }

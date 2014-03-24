@@ -15,13 +15,14 @@ define(function (require) {
     var $ = require('jquery');
     $('<link rel="stylesheet" type="text/css" href="js/test/jasmine-1.3.1/jasmine.css" />').prependTo('head');
 
-    require(['jasmine', 'jasmine.html', 'jasmine.jquery', 'test/puotiradiaattori.spec', 'test/sound.spec'], function () {
-        var jasmineEnv = jasmine.getEnv();
-        jasmineEnv.updateInterval = 1000;
+    require('test/puotiradiaattori.spec');
+    require('test/sound.spec');
 
-        var htmlReporter = new jasmine.HtmlReporter();
-        jasmineEnv.addReporter(htmlReporter);
-        jasmineEnv.specFilter = function (spec) {return htmlReporter.specFilter(spec);};
-        jasmineEnv.execute();
-    });
+    var jasmineEnv = jasmine.getEnv();
+    jasmineEnv.updateInterval = 1000;
+
+    var htmlReporter = new jasmine.HtmlReporter();
+    jasmineEnv.addReporter(htmlReporter);
+    jasmineEnv.specFilter = function (spec) {return htmlReporter.specFilter(spec);};
+    jasmineEnv.execute();
 });
