@@ -9,7 +9,7 @@ require.config({
             'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.2.1/lodash.min',
             'lib/lodash.min'
         ],
-        'Bacon': 'lib/Bacon.min',
+        'Bacon': 'lib/Bacon',
         'Bacon.splitByKey': 'lib/Bacon.splitByKey',
         'tpl': 'lib/tpl-custom',
         'socket': 'lib/socket',

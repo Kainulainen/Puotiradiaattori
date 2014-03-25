@@ -14,7 +14,7 @@ define(function(require) {
     var messages = socket.message.map('.data').map(JSON.parse).toProperty(initialCounterValues())
     var puoti = messages.map('.puoti').splitByKey().map(counter).delay(1)
     var newCounters = puoti.filter('.newCounter')
-    var timeOfLastMessage = messages.map('.time')
+    var timeOfLastMessage = messages.map('.time').toEventStream()
     var timeOfLastMessageRepeatedlyEveryMinute = timeOfLastMessage.flatMapLatest(repeatedlyEveryMinute)
     var formattedTimeOfLastMessage = timeOfLastMessageRepeatedlyEveryMinute.merge(timeOfLastMessage).map(prettyDate)
     var countersWithTarget = puoti.filter('.hasTarget')
