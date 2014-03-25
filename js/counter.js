@@ -12,6 +12,12 @@ define(function(require) {
         var value = _.values(message)[0]
         var setup = _.find(settings.counters, {'id':id})
 
+        function updateDigits() {
+            if (newCounter()) create()
+            updateSpinners()
+            setTimeout(spin, 1)
+        }
+
         function create() {
             $('#counters').append(setup.target ? $(counterTemplate(setup)).append(targetTemplate(setup)).wrap('<div></div>').parent().html() : counterTemplate(setup))
         }
@@ -51,13 +57,10 @@ define(function(require) {
         function newCounter() {return _.isEmpty(counter())}
 
         return {
-            updateSpinners: updateSpinners,
-            spin: spin,
+            updateDigits:updateDigits,
             showTargetValue: showTargetValue,
             hasTarget: hasTarget,
-            reachedTarget: reachedTarget,
-            newCounter: newCounter,
-            create: create
+            reachedTarget: reachedTarget
         }
     }
 })

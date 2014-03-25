@@ -12,12 +12,11 @@ define(function(require) {
     var storage = require('storage')
 
     var messages = socket.message.map('.data').map(JSON.parse).toProperty(initialCounterValues())
-    var puoti = messages.map('.puoti').splitByKey().map(counter).delay(1)
-    var newCounters = puoti.filter('.newCounter')
+    var counters = messages.map('.puoti').splitByKey().map(counter).delay(1)
     var timeOfLastMessage = messages.map('.time').toEventStream()
     var timeOfLastMessageRepeatedlyEveryMinute = timeOfLastMessage.flatMapLatest(repeatedlyEveryMinute)
     var formattedTimeOfLastMessage = timeOfLastMessageRepeatedlyEveryMinute.merge(timeOfLastMessage).map(prettyDate)
-    var countersWithTarget = puoti.filter('.hasTarget')
+    var countersWithTarget = counters.filter('.hasTarget')
     var targetReached = countersWithTarget.filter('.reachedTarget')
 
     var disconnect = socket.close.toProperty(true)
@@ -28,9 +27,7 @@ define(function(require) {
     socket.open.onValue(connectedIndication)
 
     messages.onValue(storage.save)
-    newCounters.onValue('.create')
-    puoti.onValue('.updateSpinners')
-    puoti.delay(1).onValue('.spin')
+    counters.onValue('.updateDigits')
     formattedTimeOfLastMessage.assign($('#timeSinceLastUpdate'), 'text')
     countersWithTarget.onValue('.showTargetValue')
     targetReached.assign(sound, 'play')
