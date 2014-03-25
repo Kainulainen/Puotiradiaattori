@@ -1,8 +1,6 @@
 @import "compass/css3";
 @import "mixins";
 
-$bodyBgColor: #216C2A;
-
 $baseFont: 16px;
 $planeWidth: 5rem;
 $planeHeight: 6rem;
@@ -28,9 +26,7 @@ html {
 }
 
 body {
-  @include checkersBackground($bodyBgColor);
-  background-color: darken($bodyBgColor, 2%);
-  background-size: 50px 50px;
+  @include carbonFibreBackground;
   text-align: center;
   color: #fff;
 }
