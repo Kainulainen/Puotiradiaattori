@@ -2,7 +2,6 @@
 @import "mixins";
 
 $bodyBgColor: #216C2A;
-$counterBorderThickness: 2px;
 
 $baseFont: 16px;
 $planeWidth: 5rem;
@@ -11,6 +10,12 @@ $planeHeight: 6rem;
 $s: "max-width: 550px";
 $m: "max-width: 670px";
 $l: "max-width: 920px";
+
+$counterBorderThickness: 3px;
+$counterBorderColor: #777;
+$counterBackground: #fff;
+$counterBoxShadow: inset 0 0 20px #000000;
+$counterBorderRadius: 5px;
 
 * {@include box-sizing(border-box);}
 
@@ -46,8 +51,8 @@ h1 {margin:0 auto; font:{size: 3rem; weight: normal}; color: #fff; @include text
   }
 }
 
-.container {display: inline-block; width: auto; height: auto; overflow: hidden;  position: relative; margin:0; padding:1px; border: $counterBorderThickness solid #ccc; @include border-radius(5px); background: #fff; @include box-shadow(inset 0 0 20px #000000);}
-.counter { @include transform(scale(0.5)); @include perspective(1000px); }
+.container {display: inline-block; width: auto; height: auto; overflow: hidden; position: relative; margin:0; padding:1px; border: $counterBorderThickness solid $counterBorderColor; @include border-radius($counterBorderRadius); background: $counterBackground; @include box-shadow($counterBoxShadow);}
+.counter { @include scale(0.85,0.55); @include perspective(1000px); }
 .spinner {position: relative; display: inline-block; top:0; width: $planeWidth; height: $planeHeight; margin-left: 1px; @include transform-style(preserve-3d); counter-reset: digits -1;
   &:nth-child(3n+3) {margin-left: 0.5rem;}
   &:last-child {margin-left:0;}
