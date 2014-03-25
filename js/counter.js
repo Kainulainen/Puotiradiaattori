@@ -52,8 +52,8 @@ define(function(require) {
         function hasTarget() {return !_.isUndefined(setup.target)}
 
         function counter() {return $('#' + id)}
-        function digitsToSpin() {return value.toString().split('')}
-        function zeros(count) {return _.range(count).map(function() {return '0'})}
+        function digitsToSpin() {return value.toString().split('').map(Number)}
+        function zeros(count) {return _.range(0, count, 0);}
         function newCounter() {return _.isEmpty(counter())}
 
         return {
