@@ -20,9 +20,9 @@ define(function(require) {
     var countersWithTarget = puoti.filter('.hasTarget')
     var targetReached = countersWithTarget.filter('.reachedTarget')
 
-    var connect = socket.close.toProperty(true)
-    connect.onValue(disconnectIndication)
-    connect.delay(1000).assign(socket, 'connect')
+    var disconnect = socket.close.toProperty(true)
+    disconnect.onValue(disconnectIndication)
+    disconnect.delay(1000).assign(socket, 'connect')
 
     socket.open.assign(sound, 'play')
     socket.open.onValue(connectedIndication)
