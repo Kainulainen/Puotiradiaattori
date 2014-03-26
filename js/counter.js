@@ -13,7 +13,7 @@ define(function(require) {
         var setup = _.find(settings.counters, {'id':id})
 
         function updateDigits() {
-            if (newCounter()) create()
+            if (_.isEmpty(counter())) create()
             updateSpinners()
             setTimeout(spin, 1)
         }
@@ -54,7 +54,6 @@ define(function(require) {
         function counter() {return $('#' + id)}
         function digitsToSpin() {return value.toString().split('').map(Number)}
         function zeros(count) {return _.range(0, count, 0);}
-        function newCounter() {return _.isEmpty(counter())}
 
         return {
             updateDigits:updateDigits,
