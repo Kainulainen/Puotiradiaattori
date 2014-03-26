@@ -15,7 +15,7 @@ define(function(require) {
         function updateDigits() {
             if (_.isEmpty(counter())) create()
             updateSpinners()
-            setTimeout(spin, 1)
+            setTimeout(spin, 1000)
         }
 
         function create() {
