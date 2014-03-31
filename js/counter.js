@@ -23,7 +23,7 @@ define(function(require) {
         }
 
         function updateSpinners() {
-            return counter().find('.counter').html(createSpinners(updatedNumberOfSpinners()))
+            counter().find('.counter').html(createSpinners(updatedNumberOfSpinners()))
         }
         function createSpinners(digits) {
             return _.range(digits).map(function(element, index) {
